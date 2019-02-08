@@ -1,11 +1,11 @@
 import React from 'react';
 
-export class ClickerComponent extends React.Component {
+export class UsersComponent extends React.Component {
 
   render() {
     return (
       <div>
-        Clicker Component
+        Users Component
       </div>
     )
   }

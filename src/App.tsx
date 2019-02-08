@@ -1,36 +1,24 @@
 import React, { Component } from 'react';
-import './App.css';
 import './include/Bootstrap';
+import './App.css';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { NavComponent } from './components/nav/Nav.component';
 import { HomeComponent } from './components/home/Home.component';
-import { BrowserRouter, Route } from 'react-router-dom';
-import { ClickerComponent } from './components/clicker/Clicker.component';
-import { SignInComponent } from './components/signin/SignIn.component';
-import { FirstComponent } from './components/first/First.component';
-import { SecondComponent } from './components/second/Second.component';
-import { NestedComponent } from './components/nested/Nested.component';
-import { MoviesComponent } from './components/movies/Movies.component';
-import { ChuckNorrisJokesComponent } from './components/chucknorrisjokes/ChuckNorrisJokes.component';
-import { TicTacToeGameComponent } from './components/tictactoegame/TicTacToeGame.component';
-import { PokemonComponent } from './components/pokemon/Pokemon.component';
+import { LoginComponent } from './components/login/Login.component';
+import { ReimbursementsComponent } from './components/reimbursements/Reimbursements.component';
+import { UsersComponent } from './components/users/Users.component';
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
+        <div className="main-area">
           <NavComponent />
           <div className="container">
             <Route path='/home' component={HomeComponent} />
-            <Route path='/sign-in' component={SignInComponent} />
-            <Route path='/first' component={FirstComponent} />
-            <Route path='/second' component={SecondComponent} />
-            <Route path='/clicker' component={ClickerComponent} />
-            <Route path='/movies' component={MoviesComponent} />
-            <Route path='/tic-tac-toe' component={TicTacToeGameComponent} />
-            <Route path='/chuck-norris' component={ChuckNorrisJokesComponent} />
-            <Route path='/pokemon' component={PokemonComponent} />
-            <Route path='/nested' component={NestedComponent} />
+            <Route path='/login' component={LoginComponent} />
+            <Route path='/users' component={UsersComponent} />
+            <Route path='/reimbursements' component={ReimbursementsComponent} />
           </div>
         </div>
       </BrowserRouter>
