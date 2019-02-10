@@ -1,11 +1,73 @@
 import React from 'react';
+import { expenseClient } from '../../axios/expense.client';
+import { User } from '../../models/user';
 
-export class UsersComponent extends React.Component {
+interface UsersComponentState {
+  users: User[]
+  usersLoaded: boolean
+}
+
+export class UsersComponent extends React.Component<any, UsersComponentState> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+      usersLoaded: false
+    }
+  }
+
+  // Load the users once the component mounts
+  componentDidMount() {
+    this.loadUsers();
+  }
+
+  // Load the users from the API and store the users in the component state
+  loadUsers = () => {
+    expenseClient.get('/users')
+      .then(response => {
+        console.log('Users response.data', response.data);
+        this.setState({
+          users: response.data,
+          usersLoaded: true
+        }, () => {
+
+          console.log('Users this.state:', this.state);
+        });
+      }
+      )
+      .catch(err => console.log(err));
+  };
+
 
   render() {
     return (
       <div className="jumbotron content-area">
-        <h2>Users Component</h2>
+        <h2>Users</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">Username</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">email</th>
+              <th scope="col">role</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.users.map(user => (
+              <tr key={user.userId}>
+                <td>{user.username}</td>
+                <td>{user.firstName}</td>
+                <td>{user.lastName}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+              </tr>
+            ))
+            }
+          </tbody>
+        </table>
+
       </div>
     )
   }
