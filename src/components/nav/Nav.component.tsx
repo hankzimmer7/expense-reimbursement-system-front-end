@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '../../assets/raynors-raiders-logo.png';
 
-export class NavComponent extends React.Component {
+export class NavComponent extends React.Component<any, any> {
   render() {
     return (
       <nav className="navbar navbar-toggleable-md navbar-expand-sm navbar-dark bg-dark display-front nav-pad">
@@ -28,6 +28,9 @@ export class NavComponent extends React.Component {
             </li>
             <li className="nav-item active">
               <Link to="/reimbursements" className="unset-anchor nav-link">Reimbursements</Link>
+            </li>
+            <li className="nav-item active">
+              <Link to="#" className="unset-anchor nav-link" onClick={this.props.logout}>Logout</Link>
             </li>
           </ul>
         </div>

@@ -4,8 +4,8 @@ export class UsersComponent extends React.Component {
 
   render() {
     return (
-      <div>
-        Users Component
+      <div className="jumbotron content-area">
+        <h2>Users Component</h2>
       </div>
     )
   }

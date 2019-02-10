@@ -4,8 +4,8 @@ export class HomeComponent extends React.Component {
 
   render() {
     return (
-      <div>
-        Home Component
+      <div className="jumbotron content-area">
+        <h2>Home Component</h2>
       </div>
     )
   }

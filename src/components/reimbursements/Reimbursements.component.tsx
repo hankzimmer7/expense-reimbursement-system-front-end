@@ -4,8 +4,8 @@ export class ReimbursementsComponent extends React.Component {
 
   render() {
     return (
-      <div>
-        Reimbursements Component
+      <div className="jumbotron content-area">
+        <h2>Reimbursements Component</h2>
       </div>
     )
   }
