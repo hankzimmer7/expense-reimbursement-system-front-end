@@ -81,10 +81,18 @@ nav {
 .main-area {
   background: url('./assets/space-background.jpg');
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
 }
 
 /* .content-area {
   background: black;
   border: 1px solid greenyellow;
 } */
+
+/*****************************
+  Content Area
+*****************************/
+
+td {
+  font-size: .75em;
+}

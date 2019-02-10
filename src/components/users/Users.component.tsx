@@ -49,8 +49,8 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
               <th scope="col">Username</th>
               <th scope="col">First Name</th>
               <th scope="col">Last Name</th>
-              <th scope="col">email</th>
-              <th scope="col">role</th>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
 
             </tr>
           </thead>
