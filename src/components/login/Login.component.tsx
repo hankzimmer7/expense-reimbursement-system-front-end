@@ -1,26 +1,7 @@
-// import React from 'react';
-
-// class Login extends React.Component {  
-
-//   render() {
-//     return (
-//       <div className='jumbotron content-area'>
-//         Login Component
-//       </div>
-//     )
-//   }
-
-// }
-
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom'
 import { Link } from 'react-router-dom';
 import { expenseClient } from '../../axios/expense.client';
-
-// type MyProps = { 
-  
-//  };
-// type MyState = { value: string };
 
 export class LoginComponent extends Component<any, any> {
 
@@ -33,8 +14,6 @@ export class LoginComponent extends Component<any, any> {
         redirectTo: null
       }
   }
-
-
 
   componentDidMount = () => {
       if (this.props.loggedIn) {
@@ -73,7 +52,7 @@ export class LoginComponent extends Component<any, any> {
         "password": this.state.password
       })
       .then(response => {
-        console.log('response from /login:', response);
+        // console.log('response from /login:', response);
         if (response.status === 200) {
           // update App.tsx state
           this.props.updateUser({
@@ -81,7 +60,7 @@ export class LoginComponent extends Component<any, any> {
               user: response.data
           })
           // update the state to redirect to dish search
-          console.log('Logged in succesfully');
+          // console.log('Logged in succesfully');
           this.setState({
             redirectTo: '/reimbursements'
           })
@@ -96,11 +75,11 @@ export class LoginComponent extends Component<any, any> {
   }
 
   render() {
-    // if (this.state.redirectTo) {
-    //     return <Redirect to={{ pathname: this.state.redirectTo }} />
-    // } else {
+    if (this.state.redirectTo) {
+        return <Redirect to={{ pathname: this.state.redirectTo }} />
+    } else {
 
-    console.log('Login component this.props.user', this.props.user)
+    // console.log('Login component this.props.user', this.props.user)
     return (
       <div className="jumbotron content-area">
         <h2>Log In</h2>
@@ -140,6 +119,6 @@ export class LoginComponent extends Component<any, any> {
       </div>
 
     )
-    // }
+    }
   };
 };
