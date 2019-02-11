@@ -15,8 +15,8 @@ class App extends Component<any, any> {
       loggedIn: null,
       user: null,
       userCheckDone: false,
-      userData: [],
-      userLoaded: false
+      // userData: [],
+      // userLoaded: false
     }
   }
 
@@ -29,7 +29,7 @@ class App extends Component<any, any> {
   checkUser = () => {
     // console.log("App.tsx running function checkUser");
     expenseClient.get('/login/info').then(response => {
-      // console.log("App.tsx checkUser response.data:", response.data);
+      console.log("App.tsx checkUser response.data:", response.data);
       if (response.data) {
         this.setState({
           loggedIn: true,
@@ -50,33 +50,33 @@ class App extends Component<any, any> {
         })
       }
     })
-      .then(() => {
-        if (this.state.loggedIn) {
-          // console.log("App.tsx checkUser: User is logged on. Running loadUser")
-          this.loadUser();
-        }
-      })
+      // .then(() => {
+      //   if (this.state.loggedIn) {
+      //     // console.log("App.tsx checkUser: User is logged on. Running loadUser")
+      //     this.loadUser();
+      //   }
+      // })
   }
 
-  loadUser = () => {
-    // console.log("App.tsx running loadUser");
-    if (this.state.user) {
-      // console.log(`App.tsx loading user ${this.state.user.user_id}`);
-      expenseClient.get(`/users/${this.state.user.user_id}`)
-        .then(response => {
-          if (response.data) {
-            this.setState({
-              user: response.data,
-              userLoaded: true
-            }, () => {
-              // console.log('App.tsx this.state', this.state);
-            });
-          } else {
-            console.log(`No response from get /api/users/${this.state.user.user_id}`)
-          }
-        })
-    }
-  }
+  // loadUser = () => {
+  //   // console.log("App.tsx running loadUser");
+  //   if (this.state.user) {
+  //     // console.log(`App.tsx loading user ${this.state.user.user_id}`);
+  //     expenseClient.get(`/users/${this.state.user.user_id}`)
+  //       .then(response => {
+  //         if (response.data) {
+  //           this.setState({
+  //             user: response.data,
+  //             userLoaded: true
+  //           }, () => {
+  //             // console.log('App.tsx this.state', this.state);
+  //           });
+  //         } else {
+  //           console.log(`No response from get /api/users/${this.state.user.user_id}`)
+  //         }
+  //       })
+  //   }
+  // }
 
   updateUser = userObject => {
     this.setState(userObject);

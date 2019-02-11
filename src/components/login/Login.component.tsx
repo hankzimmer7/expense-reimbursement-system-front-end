@@ -44,14 +44,14 @@ export class LoginComponent extends Component<any, any> {
         "password": this.state.password
       })
       .then(response => {
-        // console.log('response from /login:', response);
+        console.log('response from /login:', response);
         if (response.status === 200) {
           // update App.tsx state
           this.props.updateUser({
             loggedIn: true,
             user: response.data
           })
-          // update the state to redirect to dish search
+          // update the state to redirect to reimbursements
           // console.log('Logged in succesfully');
           this.setState({
             redirectTo: '/reimbursements'
