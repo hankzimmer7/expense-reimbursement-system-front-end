@@ -5,22 +5,14 @@ import { expenseClient } from '../../axios/expense.client';
 
 export class LoginComponent extends Component<any, any> {
 
-  constructor (props) {
-    super (props);
-      this.state = {
-        username: '',
-        password: '',
-        message: '',
-        redirectTo: null
-      }
-  }
-
-  componentDidMount = () => {
-      if (this.props.loggedIn) {
-          this.setState({
-              redirectTo: '/reimbursements'
-          })
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+      message: '',
+      redirectTo: null
+    }
   }
 
   handleInputChange = event => {
@@ -56,8 +48,8 @@ export class LoginComponent extends Component<any, any> {
         if (response.status === 200) {
           // update App.tsx state
           this.props.updateUser({
-              loggedIn: true,
-              user: response.data
+            loggedIn: true,
+            user: response.data
           })
           // update the state to redirect to dish search
           // console.log('Logged in succesfully');
@@ -76,49 +68,49 @@ export class LoginComponent extends Component<any, any> {
 
   render() {
     if (this.state.redirectTo) {
-        return <Redirect to={{ pathname: this.state.redirectTo }} />
+      return <Redirect to={{ pathname: this.state.redirectTo }} />
     } else {
 
-    // console.log('Login component this.props.user', this.props.user)
-    return (
-      <div className="jumbotron content-area">
-        <h2>Log In</h2>
-        <p className="text-danger">{this.state.message}</p>
-        <form>
-          <div className="form-group">
-            <label htmlFor="username">Username:</label>
-            <input
-              type="text"
-              className="form-control"
-              name="username"
-              placeholder="Username"
-              value={this.state.username}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              className="form-control"
-              name="password"
-              placeholder="Password"
-              value={this.state.password}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <button
-            type="submit"
-            className="btn btn-primary btn-block mb-3"
-            value="Log In"
-            onClick={this.handleFormSubmit}
-          >
-            Log In
+      // console.log('Login component this.props.user', this.props.user)
+      return (
+        <div className="jumbotron content-area">
+          <h2>Log In</h2>
+          <p className="text-danger">{this.state.message}</p>
+          <form>
+            <div className="form-group">
+              <label htmlFor="username">Username:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Username"
+                value={this.state.username}
+                onChange={this.handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                placeholder="Password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
+              />
+            </div>
+            <button
+              type="submit"
+              className="btn btn-primary btn-block mb-3"
+              value="Log In"
+              onClick={this.handleFormSubmit}
+            >
+              Log In
           </button>
-        </form>
-      </div>
+          </form>
+        </div>
 
-    )
+      )
     }
   };
 };

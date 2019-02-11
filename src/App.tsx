@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './include/Bootstrap';
 import './App.css';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { NavComponent } from './components/nav/Nav.component';
 import { LoginComponent } from './components/login/Login.component';
 import { ReimbursementsComponent } from './components/reimbursements/Reimbursements.component';
@@ -125,24 +125,33 @@ class App extends Component<any, any> {
             logout={this.logout}
           />
           <div className="container">
-            <Route
-              path="/login"
-              render={(props) => <LoginComponent
-                {...props}
-                updateUser={this.updateUser}
-                user={this.state.user}
-                loggedIn={this.state.loggedIn} />
-              } />
-            <Route path='/users' component={UsersComponent} />
-            <Route
-              path='/reimbursements'
-              render={(props) => <ReimbursementsComponent
-                {...props}
-                updateUser={this.updateUser}
-                user={this.state.user}
-                loggedIn={this.state.loggedIn} />
-              }
-            />
+            <Switch>
+              <Route
+                path='/login'
+                render={(props) => <LoginComponent
+                  {...props}
+                  updateUser={this.updateUser}
+                  user={this.state.user}
+                  loggedIn={this.state.loggedIn} />
+                } />
+              <Route
+                path='/users'
+                render={(props) => <UsersComponent
+                  {...props}
+                  user={this.state.user}
+                  loggedIn={this.state.loggedIn} />
+                }
+              />
+              <Route
+                path='/reimbursements'
+                render={(props) => <ReimbursementsComponent
+                  {...props}
+                  user={this.state.user}
+                  loggedIn={this.state.loggedIn} />
+                }
+              />
+              <Redirect from='*' to='/reimbursements' />
+            </Switch>
           </div>
         </div>
       </BrowserRouter>
