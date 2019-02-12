@@ -8,6 +8,12 @@ interface ReimbursementsComponentState {
   reimbursements: Reimbursement[]
   reimbursementsLoaded: boolean
   redirectTo: any
+  newReimbursementIsBeingAdded: boolean
+  amountInput: string
+  descriptionInput: string
+  typeInput: string
+  resolverInput: string
+  message: string
 }
 
 export class ReimbursementsComponent extends React.Component<any, ReimbursementsComponentState> {
@@ -16,13 +22,19 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     this.state = {
       reimbursements: [],
       reimbursementsLoaded: false,
-      redirectTo: null
+      redirectTo: null,
+      newReimbursementIsBeingAdded: false,
+      amountInput: '',
+      descriptionInput: '',
+      typeInput: '0',
+      resolverInput: '0',
+      message: ''
     }
   }
 
   // Load the reimbursements once the component mounts
   componentDidMount() {
-    console.log("Reimbursements.tsx this.props", this.props);
+    // console.log("Reimbursements.tsx this.props", this.props);
     if (this.props.loggedIn) {
       if (this.props.user.role === 'user') {
         this.loadMyReimbursements();
@@ -55,16 +67,11 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
   loadMyReimbursements = () => {
     expenseClient.get(`/reimbursements/author/userId/${this.props.user.userId}`)
       .then(response => {
-        console.log('Reimbursements response.data', response.data);
-        // console.log('Reimbursements response.data[0].dateResolved', response.data[0].dateResolved);
-        // console.log('moment(response.data[5].dateResolved).format()', moment(response.data[5].dateResolved).format('MMM D, YYYY'));
-        // let now = moment().format('LLLL');
-        // console.log('moment().format()', moment().format());
+        // console.log('Reimbursements response.data', response.data);
         this.setState({
           reimbursements: response.data,
           reimbursementsLoaded: true
         }, () => {
-
           // console.log('Reimbursements this.state:', this.state);
         });
       }
@@ -72,7 +79,64 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       .catch(err => console.log(err));
   };
 
+
+
+  handleNewReimbursement = () => {
+    console.log("Clicked button to add a new reimbursement");
+    this.setState({
+      newReimbursementIsBeingAdded: true
+    })
+  }
+
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      ...this.state,
+      [name]: value
+    })
+  }
+
+  // When the user clicks the submit button for a new reimbursement
+  handleSubmitReimbursement = () => {
+    console.log("Clicked button to submit reimbursement");
+    console.log("this.state", this.state);
+    if (isNaN(parseFloat(this.state.amountInput))) {
+      this.setState({
+        message: 'Amount must be a number'
+      })
+    } else if(this.state.descriptionInput === '') {
+      this.setState({
+        message: 'Please enter a description'
+      })
+    } else if (this.state.typeInput === '0') {
+      this.setState({
+        message: 'Please select a type'
+      })
+    } else if (this.state.resolverInput === '0') {
+      this.setState({
+        message: 'Please select a resolver'
+      })
+    } else {
+      const newReimbursement = {
+        author: this.props.user.userId,
+        amount: this.state.amountInput,
+        description: this.state.descriptionInput,
+        type: this.state.typeInput,
+        resolver: this.state.resolverInput
+      }
+      console.log(newReimbursement);
+      expenseClient.post('/reimbursements', newReimbursement)
+        .then(response => {
+          console.log('Reimbursements post response.data', response.data);
+        })
+        .catch(err => console.log(err))
+    }
+  }
+
+
   render() {
+    // Current date is used for display when entering a new reimbursement
+    let currentDate = new Date();
     if (this.state.redirectTo) {
       return <Redirect to={{ pathname: this.state.redirectTo }} />
     } else {
@@ -99,7 +163,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                     <td>{reimbursement.author}</td>
                     <td>{reimbursement.amount}</td>
                     <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                    <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1970') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                    <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
                     <td>{reimbursement.description}</td>
                     <td>{reimbursement.type}</td>
                     <td>{reimbursement.resolver}</td>
@@ -108,8 +172,92 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                 ))
               ) : (<tr><td>Loading...</td></tr>
                 )}
+              {this.state.newReimbursementIsBeingAdded ? (
+                <tr >
+                  <td>{`${this.props.user.firstName} ${this.props.user.lastName}`}</td>
+                  <td>
+                    <div className="input-group input-group-sm">
+                      <div className="input-group-prepend">
+                        <span className="input-group-text">$</span>
+                      </div>
+                      <input type="text"
+                        name="amountInput"
+                        className="form-control" placeholder="Amount" aria-label="Amount" aria-describedby="amount-input"
+                        value={this.state.amountInput}
+                        onChange={this.handleInputChange} />
+                    </div>
+                  </td>
+                  <td>{moment(currentDate).format('MMM D, YYYY')}</td>
+                  <td></td>
+                  <td>
+                    <div className="input-group input-group-sm">
+                      <input type="text"
+                        name="descriptionInput"
+                        className="form-control" placeholder="Description" aria-label="Description" aria-describedby="description-input"
+                        value={this.state.descriptionInput}
+                        onChange={this.handleInputChange} />
+                    </div>
+                  </td>
+                  <td>
+                    <div className="input-group input-group-sm">
+                      <select
+                        className="custom-select"
+                        name="typeInput"
+                        value={this.state.typeInput}
+                        onChange={this.handleInputChange}
+                      >
+                        <option value="0">Type...</option>
+                        <option value="1">Lodging</option>
+                        <option value="2">Travel</option>
+                        <option value="3">Food</option>
+                        <option value="4">Other</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="input-group input-group-sm">
+                      <select
+                        className="custom-select"
+                        name="resolverInput"
+                        value={this.state.resolverInput}
+                        onChange={this.handleInputChange}
+                      >
+                        <option value="0">Resolver...</option>
+                        <option value="2">Kerrigan</option>
+                        <option value="3">Tassadar</option>
+                        <option value="4">Nova</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td></td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
+          {this.state.newReimbursementIsBeingAdded ? (
+            <React.Fragment>
+              <p className="text-danger">{this.state.message}</p>
+              <button
+                type="submit"
+                id="submit-reimbursement-button-div"
+                className="btn btn-primary"
+                value="New Reimbursement"
+                onClick={this.handleSubmitReimbursement}
+              >
+                Submit Reimbursement
+            </button>
+            </React.Fragment>
+          ) : (
+              <button
+                type="button"
+                id="new-reimbursement-button"
+                className="btn btn-primary"
+                value="New Reimbursement"
+                onClick={this.handleNewReimbursement}
+              >
+                New Reimbursement
+            </button>
+            )}
         </div>
       )
     }

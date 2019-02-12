@@ -27,7 +27,7 @@ class App extends Component<any, any> {
   checkUser = () => {
     // console.log("App.tsx running function checkUser");
     expenseClient.get('/login/info').then(response => {
-      console.log("App.tsx checkUser response.data:", response.data);
+      // console.log("App.tsx checkUser response.data:", response.data);
       if (response.data) {
         this.setState({
           loggedIn: true,

@@ -12,6 +12,4 @@ if (process.env.NODE_ENV === 'production') {
     environment = prod;
 }
 
-console.log("environment url is:", environment);
-
 export default environment;
