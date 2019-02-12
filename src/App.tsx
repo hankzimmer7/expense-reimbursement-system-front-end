@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import './include/Bootstrap';
 import './App.css';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { NavComponent } from './components/nav/Nav.component';
-import { LoginComponent } from './components/login/Login.component';
-import { ReimbursementsComponent } from './components/reimbursements/Reimbursements.component';
-import { UsersComponent } from './components/users/Users.component';
-import { expenseClient } from './axios/expense.client';
+import NavComponent from './components/nav/Nav.component';
+import LoginComponent from './components/login/Login.component';
+import ReimbursementsComponent from './components/reimbursements/Reimbursements.component';
+import UsersComponent from './components/users/Users.component';
+import expenseClient from './axios/expense.client';
 
 class App extends Component<any, any> {
   constructor(props) {
@@ -15,8 +15,6 @@ class App extends Component<any, any> {
       loggedIn: null,
       user: null,
       userCheckDone: false,
-      // userData: [],
-      // userLoaded: false
     }
   }
 
@@ -50,33 +48,7 @@ class App extends Component<any, any> {
         })
       }
     })
-      // .then(() => {
-      //   if (this.state.loggedIn) {
-      //     // console.log("App.tsx checkUser: User is logged on. Running loadUser")
-      //     this.loadUser();
-      //   }
-      // })
   }
-
-  // loadUser = () => {
-  //   // console.log("App.tsx running loadUser");
-  //   if (this.state.user) {
-  //     // console.log(`App.tsx loading user ${this.state.user.user_id}`);
-  //     expenseClient.get(`/users/${this.state.user.user_id}`)
-  //       .then(response => {
-  //         if (response.data) {
-  //           this.setState({
-  //             user: response.data,
-  //             userLoaded: true
-  //           }, () => {
-  //             // console.log('App.tsx this.state', this.state);
-  //           });
-  //         } else {
-  //           console.log(`No response from get /api/users/${this.state.user.user_id}`)
-  //         }
-  //       })
-  //   }
-  // }
 
   updateUser = userObject => {
     this.setState(userObject);

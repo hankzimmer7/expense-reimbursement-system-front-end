@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { expenseClient } from '../../axios/expense.client';
-import { User } from '../../models/user';
+import expenseClient from '../../axios/expense.client';
+import User from '../../models/user';
 
 interface UsersComponentState {
   users: User[]
@@ -87,3 +87,5 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
     }
   }
 }
+
+export default UsersComponent;

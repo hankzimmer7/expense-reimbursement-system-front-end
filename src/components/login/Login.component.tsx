@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom'
-import { Link } from 'react-router-dom';
-import { expenseClient } from '../../axios/expense.client';
+import expenseClient from '../../axios/expense.client';
 
-export class LoginComponent extends Component<any, any> {
+class LoginComponent extends Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -114,3 +113,5 @@ export class LoginComponent extends Component<any, any> {
     }
   };
 };
+
+export default LoginComponent;

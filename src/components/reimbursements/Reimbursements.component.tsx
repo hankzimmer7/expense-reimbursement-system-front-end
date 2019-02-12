@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { expenseClient } from '../../axios/expense.client';
-import { Reimbursement } from '../../models/reimbursement';
+import expenseClient from '../../axios/expense.client';
+import Reimbursement from '../../models/reimbursement';
 const moment = require('moment');
 
 interface ReimbursementsComponentState {
@@ -40,16 +40,11 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
   loadAllReimbursements = () => {
     expenseClient.get('/reimbursements')
       .then(response => {
-        console.log('Reimbursements response.data', response.data);
-        // console.log('Reimbursements response.data[0].dateResolved', response.data[0].dateResolved);
-        // console.log('moment(response.data[5].dateResolved).format()', moment(response.data[5].dateResolved).format('MMM D, YYYY'));
-        // let now = moment().format('LLLL');
-        // console.log('moment().format()', moment().format());
+        // console.log('Reimbursements response.data', response.data);
         this.setState({
           reimbursements: response.data,
           reimbursementsLoaded: true
         }, () => {
-
           // console.log('Reimbursements this.state:', this.state);
         });
       }
@@ -119,5 +114,6 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       )
     }
   }
-
 }
+
+export default ReimbursementsComponent;

@@ -1,4 +1,4 @@
-export class Reimbursement {
+class Reimbursement {
     reimbursementId: number;
     author: number | string;
     amount: number;
@@ -21,3 +21,5 @@ export class Reimbursement {
         this.type = type;
     }
 }
+
+export default Reimbursement;

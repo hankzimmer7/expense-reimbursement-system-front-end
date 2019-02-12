@@ -43,6 +43,8 @@ export class NavComponent extends React.Component<any, any> {
           </ul>
         </div>
       </nav>
-    );
+    )
   }
 }
+
+export default NavComponent;

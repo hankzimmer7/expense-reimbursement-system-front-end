@@ -1,6 +1,6 @@
 import { Role } from './role';
 
-export class User {
+class User {
     userId: number;
     username: string;
     password: string;
@@ -19,3 +19,5 @@ export class User {
         this.role = role;
     }
 }
+
+export default User;
