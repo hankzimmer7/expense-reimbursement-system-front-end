@@ -16,10 +16,10 @@ export class NavComponent extends React.Component<any, any> {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarsExample04">
-          <div className="navbar-nav">
-            {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
-          </div>
           <ul className="navbar-nav ml-auto margin-nav">
+          <li className="navbar-nav">
+            {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
+          </li>
             {/* <li className="nav-item active">
               <Link to="/login" className="unset-anchor nav-link">Login</Link>
             </li> */}

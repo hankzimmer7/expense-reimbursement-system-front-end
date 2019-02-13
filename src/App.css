@@ -1,6 +1,11 @@
+html {
+  background: fixed url('./assets/space-background.jpg');
+  background-size: cover;
+}
+
 body {
+  background: transparent;
   font-family: 'Orbitron', sans-serif;
-  /* color: yellowgreen; */
 }
 
 .App {
@@ -53,6 +58,10 @@ body {
   color: greenyellow;
 } */
 
+.navbar-nav {
+  padding: .5rem 1rem .5rem 0;
+}
+
 .navbar-dark .navbar-nav .nav-link:hover {
   color:greenyellow;
 }
@@ -78,16 +87,8 @@ nav {
 /*****************************
   Main Page Area
 *****************************/
-.main-area {
-  background: url('./assets/space-background.jpg');
-  background-size: cover;
-  background-repeat: repeat;
-}
 
-/* .content-area {
-  background: black;
-  border: 1px solid greenyellow;
-} */
+
 
 /*****************************
   Content Area

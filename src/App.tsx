@@ -90,13 +90,13 @@ class App extends Component<any, any> {
 
     return (
       <BrowserRouter>
-        <div className="main-area">
+        <div className="main-area clearfix">
           <NavComponent
             loggedIn={this.state.loggedIn}
             user={this.state.user}
             logout={this.logout}
           />
-          <div className="container">
+          <div className="container clearfix">
             <Switch>
               <Route
                 path='/login'

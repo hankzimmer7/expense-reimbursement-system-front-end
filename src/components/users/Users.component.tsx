@@ -38,13 +38,13 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
   loadUsers = () => {
     expenseClient.get('/users')
       .then(response => {
-        console.log('Users response.data', response.data);
+        // console.log('Users response.data', response.data);
         this.setState({
           users: response.data,
           usersLoaded: true
         }, () => {
 
-          console.log('Users this.state:', this.state);
+          // console.log('Users this.state:', this.state);
         });
       }
       )
