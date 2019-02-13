@@ -52,6 +52,15 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     }
   }
 
+  // Redirect if the user logged out
+  componentDidUpdate() {
+    if (!this.props.loggedIn) {
+      this.setState({
+        redirectTo: '/login'
+      })
+    }
+  }
+
   // Load all reimbursements from the API and store the reimbursements in the component state
   loadAllReimbursements = () => {
     console.log("Running Load All Reimbursements");
@@ -135,8 +144,20 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       expenseClient.post('/reimbursements', newReimbursement)
         .then(response => {
           // console.log('Reimbursements post response.data', response.data);
-          console.log("Loading Reimbursements");
-          this.loadAllReimbursements();
+          this.setState({
+            newReimbursementIsBeingAdded: false,
+            amountInput: '',
+            descriptionInput: '',
+            typeInput: '0',
+            resolverInput: '0',
+            message: '',
+          })
+          console.log("this.props.user.role", this.props.user.role);
+          if (this.props.user.role === 'user') {
+            this.loadMyReimbursements();
+          } else {
+            this.loadAllReimbursements();
+          }
         })
         .catch(err => console.log(err))
     }
@@ -221,165 +242,174 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       return (
         <div className="jumbotron content-area clearfix">
           <h2>Reimbursements</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Author</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Date Submitted</th>
-                <th scope="col">Date Resolved</th>
-                <th scope="col">Description</th>
-                <th scope="col">Type</th>
-                <th scope="col">Resolver</th>
-                <th scope="col">Status</th>
-                <th>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.reimbursementsLoaded ? (
-                this.state.reimbursements.map(reimbursement => (
-                  <tr key={reimbursement.reimbursementId}>
-                    {/* {console.log("typeof this.state.currentlyEditingReimbursement", typeof this.state.currentlyEditingReimbursement)}
+          {this.props.loggedIn ? (
+            <div className="table-wrapper">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Author</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Date Submitted</th>
+                    <th scope="col">Date Resolved</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Resolver</th>
+                    <th scope="col">Status</th>
+                    <th>
+                    </th>
+                  </tr>
+                </thead>
+
+
+
+                <tbody>
+                  {this.state.reimbursementsLoaded ? (
+                    this.state.reimbursements.map(reimbursement => (
+                      <tr key={reimbursement.reimbursementId}>
+                        {/* {console.log("typeof this.state.currentlyEditingReimbursement", typeof this.state.currentlyEditingReimbursement)}
                   {console.log("typeof reimbursement.reimbursementId",typeof reimbursement.reimbursementId)              }
                   {console.log("(this.state.currentlyEditingReimbursement === reimbursement.reimbursementId)",(this.state.currentlyEditingReimbursement === reimbursement.reimbursementId))} */}
-                    {(this.state.currentlyEditingReimbursement == reimbursement.reimbursementId) ? (
-                      <React.Fragment>
-                        <td>{reimbursement.author}</td>
-                        <td>{reimbursement.amount}</td>
-                        <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                        <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
-                        <td>{reimbursement.description}</td>
-                        <td>{reimbursement.type}</td>
-                        <td>{reimbursement.resolver}</td>
-                        <td>
-                          <div className="input-group input-group-sm">
-                            <select
-                              className="custom-select"
-                              name="statusUpdate"
-                              value={this.state.statusUpdate}
-                              onChange={this.handleInputChange}
-                            >
-                              <option value="0">Status...</option>
-                              <option value="1">Pending</option>
-                              <option value="2">Approved</option>
-                              <option value="3">Denied</option>
-                            </select>
-                          </div>
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-success"
-                            value={reimbursement.reimbursementId}
-                            onClick={this.handleSaveUpdatedReimbursement}
-                          >
-                            Save
-                            </button>
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-dark"
-                            onClick={this.handleCancelUpdateReimbursement}
-                          >
-                            cancel
-                            </button>
-                        </td>
-                      </React.Fragment>
-                    ) : (
-                        <React.Fragment>
-                          <td>{reimbursement.author}</td>
-                          <td>{reimbursement.amount}</td>
-                          <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                          <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
-                          <td>{reimbursement.description}</td>
-                          <td>{reimbursement.type}</td>
-                          <td>{reimbursement.resolver}</td>
-                          <td>{reimbursement.status}</td>
-                          <td>
-                            {(this.state.currentlyEditingReimbursement === 0) ? (
+                        {(this.state.currentlyEditingReimbursement == reimbursement.reimbursementId) ? (
+                          <React.Fragment>
+                            <td>{reimbursement.author}</td>
+                            <td>{reimbursement.amount}</td>
+                            <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
+                            <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                            <td>{reimbursement.description}</td>
+                            <td>{reimbursement.type}</td>
+                            <td>{reimbursement.resolver}</td>
+                            <td>
+                              <div className="input-group input-group-sm">
+                                <select
+                                  className="custom-select"
+                                  name="statusUpdate"
+                                  value={this.state.statusUpdate}
+                                  onChange={this.handleInputChange}
+                                >
+                                  <option value="0">Status...</option>
+                                  <option value="1">Pending</option>
+                                  <option value="2">Approved</option>
+                                  <option value="3">Denied</option>
+                                </select>
+                              </div>
+                            </td>
+                            <td>
                               <button
                                 type="button"
-                                className="btn btn-primary"
+                                className="btn btn-success"
                                 value={reimbursement.reimbursementId}
-                                onClick={this.handleUpdateReimbursement}
+                                onClick={this.handleSaveUpdatedReimbursement}
                               >
-                                Update
+                                Save
+                            </button>
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                className="btn btn-dark"
+                                onClick={this.handleCancelUpdateReimbursement}
+                              >
+                                Cancel
+                            </button>
+                            </td>
+                          </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                              <td>{reimbursement.author}</td>
+                              <td>{reimbursement.amount}</td>
+                              <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
+                              <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                              <td>{reimbursement.description}</td>
+                              <td>{reimbursement.type}</td>
+                              <td>{reimbursement.resolver}</td>
+                              <td>{reimbursement.status}</td>
+                              <td>
+                                {(this.state.currentlyEditingReimbursement === 0) && (this.props.user.role !== 'user') ? (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    value={reimbursement.reimbursementId}
+                                    onClick={this.handleUpdateReimbursement}
+                                  >
+                                    Edit
                                 </button>
-                            ) : (
-                                null
-                              )}
-                          </td>
+                                ) : (
+                                    null
+                                  )}
+                              </td>
 
-                        </React.Fragment>
-                      )}
-                  </tr>
-                ))
-              ) : (<tr><td>Loading...</td></tr>
-                )}
-              {this.state.newReimbursementIsBeingAdded ? (
-                <tr >
-                  <td>{`${this.props.user.firstName} ${this.props.user.lastName}`}</td>
-                  <td>
-                    <div className="input-group input-group-sm">
-                      <div className="input-group-prepend">
-                        <span className="input-group-text">$</span>
-                      </div>
-                      <input type="text"
-                        name="amountInput"
-                        className="form-control" placeholder="Amount" aria-label="Amount" aria-describedby="amount-input"
-                        value={this.state.amountInput}
-                        onChange={this.handleInputChange} />
-                    </div>
-                  </td>
-                  <td>{moment(currentDate).format('MMM D, YYYY')}</td>
-                  <td></td>
-                  <td>
-                    <div className="input-group input-group-sm">
-                      <input type="text"
-                        name="descriptionInput"
-                        className="form-control" placeholder="Description" aria-label="Description" aria-describedby="description-input"
-                        value={this.state.descriptionInput}
-                        onChange={this.handleInputChange} />
-                    </div>
-                  </td>
-                  <td>
-                    <div className="input-group input-group-sm">
-                      <select
-                        className="custom-select"
-                        name="typeInput"
-                        value={this.state.typeInput}
-                        onChange={this.handleInputChange}
-                      >
-                        <option value="0">Type...</option>
-                        <option value="1">Lodging</option>
-                        <option value="2">Travel</option>
-                        <option value="3">Food</option>
-                        <option value="4">Other</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="input-group input-group-sm">
-                      <select
-                        className="custom-select"
-                        name="resolverInput"
-                        value={this.state.resolverInput}
-                        onChange={this.handleInputChange}
-                      >
-                        <option value="0">Resolver...</option>
-                        <option value="2">Kerrigan</option>
-                        <option value="3">Tassadar</option>
-                        <option value="4">Nova</option>
-                      </select>
-                    </div>
-                  </td>
-                  <td></td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
+                            </React.Fragment>
+                          )}
+                      </tr>
+                    ))
+                  ) : (<tr><td>Loading...</td></tr>
+                    )}
+                  {this.state.newReimbursementIsBeingAdded ? (
+                    <tr >
+                      <td>{`${this.props.user.firstName} ${this.props.user.lastName}`}</td>
+                      <td>
+                        <div className="input-group input-group-sm">
+                          <div className="input-group-prepend">
+                            <span className="input-group-text">$</span>
+                          </div>
+                          <input type="text"
+                            name="amountInput"
+                            className="form-control" placeholder="Amount" aria-label="Amount" aria-describedby="amount-input"
+                            value={this.state.amountInput}
+                            onChange={this.handleInputChange} />
+                        </div>
+                      </td>
+                      <td>{moment(currentDate).format('MMM D, YYYY')}</td>
+                      <td></td>
+                      <td>
+                        <div className="input-group input-group-sm">
+                          <input type="text"
+                            name="descriptionInput"
+                            className="form-control" placeholder="Description" aria-label="Description" aria-describedby="description-input"
+                            value={this.state.descriptionInput}
+                            onChange={this.handleInputChange} />
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group input-group-sm">
+                          <select
+                            className="custom-select"
+                            name="typeInput"
+                            value={this.state.typeInput}
+                            onChange={this.handleInputChange}
+                          >
+                            <option value="0">Type...</option>
+                            <option value="1">Lodging</option>
+                            <option value="2">Travel</option>
+                            <option value="3">Food</option>
+                            <option value="4">Other</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="input-group input-group-sm">
+                          <select
+                            className="custom-select"
+                            name="resolverInput"
+                            value={this.state.resolverInput}
+                            onChange={this.handleInputChange}
+                          >
+                            <option value="0">Resolver...</option>
+                            <option value="2">Kerrigan</option>
+                            <option value="3">Tassadar</option>
+                            <option value="4">Nova</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td></td>
+                    </tr>
+                  ) : null}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+              null
+            )}
           {this.state.newReimbursementIsBeingAdded ? (
             <React.Fragment>
               <p className="text-danger">{this.state.message}</p>

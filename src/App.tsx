@@ -82,7 +82,6 @@ class App extends Component<any, any> {
           userCheckDone: false
         })
       }
-      window.location.reload();
     })
   }
 
@@ -90,13 +89,13 @@ class App extends Component<any, any> {
 
     return (
       <BrowserRouter>
-        <div className="main-area clearfix">
+        <div className="main-area">
           <NavComponent
             loggedIn={this.state.loggedIn}
             user={this.state.user}
             logout={this.logout}
           />
-          <div className="container clearfix">
+          <div className="container">
             <Switch>
               <Route
                 path='/login'

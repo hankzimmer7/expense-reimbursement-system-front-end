@@ -22,12 +22,20 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
   // Load the users once the component mounts
   componentDidMount() {
     // this.loadUsers();
-
     // console.log("Users.tsx this.props", this.props);
     // If an admin or finance manager is logged in, load the users
     if (this.props.loggedIn && (this.props.user.role === 'admin' || this.props.user.role === 'finance-manager')) {
       this.loadUsers();
     } else {
+      this.setState({
+        redirectTo: '/login'
+      })
+    }
+  }
+
+  // Redirect if the user logged out
+  componentDidUpdate() {
+    if (!this.props.loggedIn) {
       this.setState({
         redirectTo: '/login'
       })
@@ -43,14 +51,12 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
           users: response.data,
           usersLoaded: true
         }, () => {
-
           // console.log('Users this.state:', this.state);
         });
       }
       )
       .catch(err => console.log(err));
   };
-
 
   render() {
     if (this.state.redirectTo) {
@@ -59,29 +65,35 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
       return (
         <div className="jumbotron content-area">
           <h2>Users</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">Username</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Role</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.users.map(user => (
-                <tr key={user.userId}>
-                  <td>{user.username}</td>
-                  <td>{user.firstName}</td>
-                  <td>{user.lastName}</td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
+          <div className="table-wrapper">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">Username</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
                 </tr>
-              ))
-              }
-            </tbody>
-          </table>
+              </thead>
+              {this.props.loggedIn ? (
+
+
+                <tbody>
+                  {this.state.users.map(user => (
+                    <tr key={user.userId}>
+                      <td>{user.username}</td>
+                      <td>{user.firstName}</td>
+                      <td>{user.lastName}</td>
+                      <td>{user.email}</td>
+                      <td>{user.role}</td>
+                    </tr>
+                  ))
+                  }
+                </tbody>
+              ) : null}
+            </table>
+          </div>
         </div>
       )
     }

@@ -14,6 +14,15 @@ class LoginComponent extends Component<any, any> {
     }
   }
 
+    // Redirect if the user is logged in
+    componentDidUpdate() {
+      if (this.props.loggedIn) {
+        this.setState({
+          redirectTo: '/reimbursements'
+        })
+      }
+    }
+
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -52,9 +61,9 @@ class LoginComponent extends Component<any, any> {
           })
           // update the state to redirect to reimbursements
           // console.log('Logged in succesfully');
-          this.setState({
-            redirectTo: '/reimbursements'
-          })
+          // this.setState({
+          //   redirectTo: '/reimbursements'
+          // })
         }
       }).catch(error => {
         console.log('login error: ', error);
@@ -72,7 +81,7 @@ class LoginComponent extends Component<any, any> {
 
       // console.log('Login component this.props.user', this.props.user)
       return (
-        <div className="jumbotron content-area">
+        <div className="jumbotron login-page-content">
           <h2>Log In</h2>
           <p className="text-danger">{this.state.message}</p>
           <form>

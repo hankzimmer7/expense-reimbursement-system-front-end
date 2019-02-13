@@ -17,7 +17,7 @@ export class NavComponent extends React.Component<any, any> {
         </button>
         <div className="collapse navbar-collapse" id="navbarsExample04">
           <ul className="navbar-nav ml-auto margin-nav">
-          <li className="navbar-nav">
+          <li className="navbar-non-link">
             {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
           </li>
             {/* <li className="nav-item active">
