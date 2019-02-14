@@ -6,6 +6,7 @@ html {
 body {
   background: transparent;
   font-family: 'Orbitron', sans-serif;
+  color: rgb(130, 200, 0);
 }
 
 .App {
@@ -45,7 +46,7 @@ body {
 /*****************************
   NAV
 *****************************/
-.rev-logo {
+.logo {
   width: auto;
   height: 2em;
   margin-right: 1em;
@@ -54,10 +55,6 @@ body {
 .margin-nav {
   margin-right: 2em;
 }
-
-/* .navbar-dark .navbar-nav .active>.nav-link, .navbar-dark .navbar-nav .nav-link.active, .navbar-dark .navbar-nav .nav-link.show, .navbar-dark .navbar-nav .show>.nav-link {
-  color: greenyellow;
-} */
 
 .navbar-non-link {
   padding: .5rem 1rem .5rem 0;
@@ -73,7 +70,7 @@ body {
 }
 
 nav {
-  /* border-bottom: 1px solid greenyellow; */
+  background-image: linear-gradient(black, black, transparent);
   color: white;
   margin-bottom: 20px;
   -webkit-box-shadow: 1px -12px 28px -1px rgba(0, 0, 0, 0.87);
@@ -86,21 +83,92 @@ nav {
 }
 
 /*****************************
-  Main Page Area
-*****************************/
-
-
-
-/*****************************
   Content Area
 *****************************/
+
+.jumbotron {
+  background: black;
+  background: rgb(0, 0, 0, .8);
+  border: 1px solid red;
+}
 
 .table-wrapper {
   overflow-x: auto;
 }
 
+.table {
+  margin-bottom: 0;
+}
+
+.table td,
+.table th {
+  padding: .4rem;
+}
+
 td {
-  font-size: .8em;
+  font-size: .8rem;
+}
+
+.form-control,
+.form-control:focus {
+  color: rgb(130, 200, 0);
+  background: transparent;
+  border: 1px solid red;
+}
+
+.form-control:focus, .custom-select:focus {
+  border-color: rgb(130, 200, 0);
+  box-shadow: 0 0 0 0.2rem rgba(130, 200, 0, .25);
+}
+
+.custom-select-wrapper {
+  background: url("./assets/down-arrow.png") no-repeat right;
+}
+
+input {
+  background: transparent;
+
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+}
+input:-webkit-autofill {
+  -webkit-text-fill-color: rgb(130, 200, 0);
+}
+
+.custom-select, .input-group-text {
+  color: rgb(130, 200, 0);
+  background: transparent;
+  border: 1px solid red;
+}
+
+option {
+  color: rgb(130, 200, 0);
+  background: black;
+}
+
+
+.btn {
+  color: rgb(130, 200, 0);
+  background: transparent;
+  border: 1px solid red;
+}
+
+.btn:hover {
+  color: rgb(208, 255, 119);
+  border-color: rgb(208, 255, 119)
+}
+
+.btn-small {
+  font-size: .8rem;
+}
+
+.btn-space {
+  margin-right: 10px;
 }
 
 .login-page-content {

@@ -63,15 +63,15 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
 
   // Load all reimbursements from the API and store the reimbursements in the component state
   loadAllReimbursements = () => {
-    console.log("Running Load All Reimbursements");
+    // console.log("Running Load All Reimbursements");
     expenseClient.get('/reimbursements')
       .then(response => {
-        console.log('Reimbursements response.data', response.data);
+        // console.log('Reimbursements response.data', response.data);
         this.setState({
           reimbursements: response.data,
           reimbursementsLoaded: true
         }, () => {
-          console.log('Reimbursements this.state:', this.state);
+          // console.log('Reimbursements this.state:', this.state);
         });
       }
       )
@@ -152,7 +152,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
             resolverInput: '0',
             message: '',
           })
-          console.log("this.props.user.role", this.props.user.role);
+          // console.log("this.props.user.role", this.props.user.role);
           if (this.props.user.role === 'user') {
             this.loadMyReimbursements();
           } else {
@@ -163,13 +163,20 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     }
   }
 
+    // When the user clicks the button to cancel submitting a reimbursement
+    handleCancelSubmitReimbursement = () => {
+      this.setState({
+        newReimbursementIsBeingAdded: false
+      })
+    }
+
   // When the user clicks the button to update a reimbursement, set that as the currently editing reimbursement
   handleUpdateReimbursement = (event) => {
-    console.log("Clicked to update reimbursement")
-    console.log("Reimbursements this.state", this.state);
+    // console.log("Clicked to update reimbursement")
+    // console.log("Reimbursements this.state", this.state);
     // console.log("event", event);
     // console.log("event.target.key", event.target.key);
-    console.log("event.target", event.target);
+    // console.log("event.target", event.target);
     // console.log("event.target.value", event.target.value);
 
     const reimbursementId = +event.target.value;
@@ -182,8 +189,8 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       .then(response => {
         // console.log('Reimbursements response.data', response.data);
         reimbursementBeingUpdated = response.data
-        console.log("reimbursementBeingUpdated:", reimbursementBeingUpdated);
-        console.log("reimbursementId", reimbursementId);
+        // console.log("reimbursementBeingUpdated:", reimbursementBeingUpdated);
+        // console.log("reimbursementId", reimbursementId);
         if (reimbursementBeingUpdated) {
           this.setState({
             currentlyEditingReimbursement: reimbursementId,
@@ -201,7 +208,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
 
   // When the user clicks the button to cancel updating reimbursement
   handleCancelUpdateReimbursement = () => {
-    console.log("Clicked to cancel update reimbursement")
+    // console.log("Clicked to cancel update reimbursement");
     this.setState({
       currentlyEditingReimbursement: 0
     }, () => { console.log(this.state) })
@@ -209,7 +216,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
 
   // When the manager or admin clicks the button to save changes to a reimbursement
   handleSaveUpdatedReimbursement = () => {
-    console.log("Clicked to save changes");
+    // console.log("Clicked to save changes");
     const updatedReimbursement = {
       reimbursementId: this.state.currentlyEditingReimbursement,
       // amount: this.state.amountUpdate,
@@ -220,11 +227,11 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     // console.log(newReimbursement);
     expenseClient.patch('/reimbursements', updatedReimbursement)
       .then(response => {
-        console.log('Reimbursements post response.data', response.data);
+        // console.log('Reimbursements post response.data', response.data);
         this.setState({
           currentlyEditingReimbursement: 0
         }, () => {
-          console.log("Loading Reimbursements");
+          // console.log("Loading Reimbursements");
           this.loadAllReimbursements();
         })
       })
@@ -259,17 +266,11 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                     </th>
                   </tr>
                 </thead>
-
-
-
                 <tbody>
                   {this.state.reimbursementsLoaded ? (
                     this.state.reimbursements.map(reimbursement => (
                       <tr key={reimbursement.reimbursementId}>
-                        {/* {console.log("typeof this.state.currentlyEditingReimbursement", typeof this.state.currentlyEditingReimbursement)}
-                  {console.log("typeof reimbursement.reimbursementId",typeof reimbursement.reimbursementId)              }
-                  {console.log("(this.state.currentlyEditingReimbursement === reimbursement.reimbursementId)",(this.state.currentlyEditingReimbursement === reimbursement.reimbursementId))} */}
-                        {(this.state.currentlyEditingReimbursement == reimbursement.reimbursementId) ? (
+                        {this.state.currentlyEditingReimbursement == reimbursement.reimbursementId ? (
                           <React.Fragment>
                             <td>{reimbursement.author}</td>
                             <td>{reimbursement.amount}</td>
@@ -279,7 +280,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                             <td>{reimbursement.type}</td>
                             <td>{reimbursement.resolver}</td>
                             <td>
-                              <div className="input-group input-group-sm">
+                              <div className="input-group input-group-sm custom-select-wrapper">
                                 <select
                                   className="custom-select"
                                   name="statusUpdate"
@@ -296,7 +297,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                             <td>
                               <button
                                 type="button"
-                                className="btn btn-success"
+                                className="btn btn-small"
                                 value={reimbursement.reimbursementId}
                                 onClick={this.handleSaveUpdatedReimbursement}
                               >
@@ -306,7 +307,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                             <td>
                               <button
                                 type="button"
-                                className="btn btn-dark"
+                                className="btn btn-small"
                                 onClick={this.handleCancelUpdateReimbursement}
                               >
                                 Cancel
@@ -323,27 +324,25 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                               <td>{reimbursement.type}</td>
                               <td>{reimbursement.resolver}</td>
                               <td>{reimbursement.status}</td>
-                              <td>
-                                {(this.state.currentlyEditingReimbursement === 0) && (this.props.user.role !== 'user') ? (
+                              {(this.state.currentlyEditingReimbursement === 0) && (this.props.user.role !== 'user') ? (
+                                <td>
                                   <button
                                     type="button"
-                                    className="btn btn-primary"
+                                    className="btn btn-small"
                                     value={reimbursement.reimbursementId}
                                     onClick={this.handleUpdateReimbursement}
                                   >
                                     Edit
                                 </button>
-                                ) : (
-                                    null
-                                  )}
-                              </td>
-
+                                </td>
+                              ) : (
+                                  null
+                                )}
                             </React.Fragment>
                           )}
                       </tr>
                     ))
-                  ) : (<tr><td>Loading...</td></tr>
-                    )}
+                  ) :  null }
                   {this.state.newReimbursementIsBeingAdded ? (
                     <tr >
                       <td>{`${this.props.user.firstName} ${this.props.user.lastName}`}</td>
@@ -371,7 +370,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                         </div>
                       </td>
                       <td>
-                        <div className="input-group input-group-sm">
+                        <div className="input-group input-group-sm custom-select-wrapper">
                           <select
                             className="custom-select"
                             name="typeInput"
@@ -387,7 +386,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                         </div>
                       </td>
                       <td>
-                        <div className="input-group input-group-sm">
+                        <div className="input-group input-group-sm custom-select-wrapper">
                           <select
                             className="custom-select"
                             name="resolverInput"
@@ -407,27 +406,32 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                 </tbody>
               </table>
             </div>
-          ) : (
-              null
-            )}
+          ) : null}
           {this.state.newReimbursementIsBeingAdded ? (
             <React.Fragment>
               <p className="text-danger">{this.state.message}</p>
               <button
                 type="submit"
                 id="submit-reimbursement-button-div"
-                className="btn btn-primary"
+                className="btn btn-small btn-space"
                 value="New Reimbursement"
                 onClick={this.handleSubmitReimbursement}
               >
                 Submit Reimbursement
             </button>
+            <button
+                type="button"
+                className="btn btn-small"
+                onClick={this.handleCancelSubmitReimbursement}
+              >
+                Cancel
+                </button>
             </React.Fragment>
           ) : (
               <button
                 type="button"
                 id="new-reimbursement-button"
-                className="btn btn-primary"
+                className="btn btn-small"
                 value="New Reimbursement"
                 onClick={this.handleNewReimbursement}
               >

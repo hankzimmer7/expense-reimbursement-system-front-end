@@ -14,14 +14,14 @@ class LoginComponent extends Component<any, any> {
     }
   }
 
-    // Redirect if the user is logged in
-    componentDidUpdate() {
-      if (this.props.loggedIn) {
-        this.setState({
-          redirectTo: '/reimbursements'
-        })
-      }
+  // Redirect if the user is logged in
+  componentDidUpdate() {
+    if (this.props.loggedIn) {
+      this.setState({
+        redirectTo: '/reimbursements'
+      })
     }
+  }
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -59,11 +59,6 @@ class LoginComponent extends Component<any, any> {
             loggedIn: true,
             user: response.data
           })
-          // update the state to redirect to reimbursements
-          // console.log('Logged in succesfully');
-          // this.setState({
-          //   redirectTo: '/reimbursements'
-          // })
         }
       }).catch(error => {
         console.log('login error: ', error);
@@ -78,8 +73,6 @@ class LoginComponent extends Component<any, any> {
     if (this.state.redirectTo) {
       return <Redirect to={{ pathname: this.state.redirectTo }} />
     } else {
-
-      // console.log('Login component this.props.user', this.props.user)
       return (
         <div className="jumbotron login-page-content">
           <h2>Log In</h2>
@@ -109,7 +102,7 @@ class LoginComponent extends Component<any, any> {
             </div>
             <button
               type="submit"
-              className="btn btn-primary btn-block mb-3"
+              className="btn btn-block"
               value="Log In"
               onClick={this.handleFormSubmit}
             >

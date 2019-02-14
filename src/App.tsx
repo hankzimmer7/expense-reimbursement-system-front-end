@@ -86,7 +86,6 @@ class App extends Component<any, any> {
   }
 
   render() {
-
     return (
       <BrowserRouter>
         <div className="main-area">

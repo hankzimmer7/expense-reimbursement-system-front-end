@@ -5,10 +5,10 @@ import Logo from '../../assets/raynors-raiders-logo.png';
 export class NavComponent extends React.Component<any, any> {
   render() {
     return (
-      <nav className="navbar navbar-toggleable-md navbar-expand-lg navbar-dark bg-dark display-front nav-pad">
+      <nav className="navbar navbar-toggleable-md navbar-expand-lg navbar-dark display-front nav-pad">
         <div className="navbar-header c-pointer shift-left">
           <Link to="/home" className="navbar-brand unset-anchor">
-            <img className="img-adjust-position rev-logo" src={Logo} alt="protoss" />
+            <img className="img-adjust-position logo" src={Logo} alt="logo" />
             ERS
           </Link>
         </div>
@@ -17,12 +17,9 @@ export class NavComponent extends React.Component<any, any> {
         </button>
         <div className="collapse navbar-collapse" id="navbarsExample04">
           <ul className="navbar-nav ml-auto margin-nav">
-          <li className="navbar-non-link">
-            {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
-          </li>
-            {/* <li className="nav-item active">
-              <Link to="/login" className="unset-anchor nav-link">Login</Link>
-            </li> */}
+            <li className="navbar-non-link">
+              {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
+            </li>
             {this.props.loggedIn && (
               <React.Fragment>
                 {(this.props.user.role === ('user')) || (
