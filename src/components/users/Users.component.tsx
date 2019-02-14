@@ -294,7 +294,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                                   </select>
                                 </div>
                               </td>
-                              <td>
+                              <td className="no-border">
                                 <button
                                   type="submit"
                                   className="btn btn-small"
@@ -304,7 +304,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                                   Save
                             </button>
                               </td>
-                              <td>
+                              <td className="no-border">
                                 <button
                                   type="button"
                                   className="btn btn-small"
@@ -322,7 +322,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                                 <td>{user.email}</td>
                                 <td>{user.role}</td>
                                 {(this.state.currentlyEditingUser === 0) && (this.props.user.role === 'admin') ? (
-                                  <td>
+                                  <td className="no-border">
                                     <button
                                       type="button"
                                       className="btn btn-small"
