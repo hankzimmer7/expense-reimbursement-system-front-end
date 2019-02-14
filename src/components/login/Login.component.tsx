@@ -64,7 +64,7 @@ class LoginComponent extends Component<any, any> {
         console.log('login error: ', error);
         // Display to the user that there was a login error
         this.setState({
-          message: 'Incorrect username or password'
+          message: 'Incorrect username or password. Both are case sensitive.'
         });
       })
   }
