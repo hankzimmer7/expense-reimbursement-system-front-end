@@ -124,29 +124,38 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
       })
     }
     else {
-      const newReimbursement = {
-        username: this.state.usernameInput,
-        password: this.state.passwordInput,
-        firstName: this.state.firstNameInput,
-        lastName: this.state.lastNameInput,
-        email: this.state.emailInput,
-        role: this.state.roleInput
-      }
-      expenseClient.post('/users', newReimbursement)
-        .then(response => {
-          this.setState({
-            newUserIsBeingAdded: false,
-            usernameInput: '',
-            passwordInput: '',
-            firstNameInput: '',
-            lastNameInput: '',
-            emailInput: '',
-            message: '',
-            roleInput: 0,
-          })
-          this.loadUsers();
+      // Check if the username is already taken
+      const usernameIsAlreadyTaken = this.state.users.find(user => user.username === this.state.usernameInput);
+      if (usernameIsAlreadyTaken) {
+        this.setState({
+          message: 'Username is already taken. Please enter a different username.'
         })
-        .catch(err => console.log(err))
+      } else {
+
+        const newReimbursement = {
+          username: this.state.usernameInput,
+          password: this.state.passwordInput,
+          firstName: this.state.firstNameInput,
+          lastName: this.state.lastNameInput,
+          email: this.state.emailInput,
+          role: this.state.roleInput
+        }
+        expenseClient.post('/users', newReimbursement)
+          .then(response => {
+            this.setState({
+              newUserIsBeingAdded: false,
+              usernameInput: '',
+              passwordInput: '',
+              firstNameInput: '',
+              lastNameInput: '',
+              emailInput: '',
+              message: '',
+              roleInput: 0,
+            })
+            this.loadUsers();
+          })
+          .catch(err => console.log(err))
+      }
     }
   }
 
@@ -290,7 +299,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                                     <option value="0">Role...</option>
                                     <option value="1">admin</option>
                                     <option value="2">finance-manager</option>
-                                    <option value="4">user</option>
+                                    <option value="3">user</option>
                                   </select>
                                 </div>
                               </td>
@@ -389,7 +398,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                               <option value="0">Role...</option>
                               <option value="1">admin</option>
                               <option value="2">finance-manager</option>
-                              <option value="4">user</option>
+                              <option value="3">user</option>
                             </select>
                           </div>
                         </td>

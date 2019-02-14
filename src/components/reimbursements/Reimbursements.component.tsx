@@ -9,10 +9,10 @@ interface ReimbursementsComponentState {
   reimbursementsLoaded: boolean
   redirectTo: any
   newReimbursementIsBeingAdded: boolean
-  amountInput: string
+  amountInput: number
   descriptionInput: string
-  typeInput: string
-  resolverInput: string
+  typeInput: number
+  resolverInput: number
   message: string
   currentlyEditingReimbursement: number
   amountUpdate: number
@@ -29,10 +29,10 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       reimbursementsLoaded: false,
       redirectTo: null,
       newReimbursementIsBeingAdded: false,
-      amountInput: '',
+      amountInput: 0,
       descriptionInput: '',
-      typeInput: '0',
-      resolverInput: '0',
+      typeInput: 0,
+      resolverInput: 0,
       message: '',
       currentlyEditingReimbursement: 0,
       amountUpdate: 0,
@@ -153,19 +153,23 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
   handleSubmitReimbursement = () => {
 
     //Check to ensure the fields are entered correctly
-    if (isNaN(parseFloat(this.state.amountInput))) {
+    if (isNaN(this.state.amountInput)) {
       this.setState({
         message: 'Amount must be a number'
+      })
+    } else if (this.state.amountInput <= 0) {
+      this.setState({
+        message: 'Amount must be greater than 0'
       })
     } else if (this.state.descriptionInput === '') {
       this.setState({
         message: 'Please enter a description'
       })
-    } else if (this.state.typeInput === '0') {
+    } else if (this.state.typeInput === 0) {
       this.setState({
         message: 'Please select a type'
       })
-    } else if (this.state.resolverInput === '0') {
+    } else if (this.state.resolverInput === 0) {
       this.setState({
         message: 'Please select a resolver'
       })
@@ -178,15 +182,17 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
         resolver: this.state.resolverInput
       }
 
+      console.log("handleSubmitReimbursement, new reimbursement being added to database:",newReimbursement);
+
       // Post the new reimbursement to the database
       expenseClient.post('/reimbursements', newReimbursement)
         .then(response => {
           this.setState({
             newReimbursementIsBeingAdded: false,
-            amountInput: '',
+            amountInput: 0,
             descriptionInput: '',
-            typeInput: '0',
-            resolverInput: '0',
+            typeInput: 0,
+            resolverInput: 0,
             message: '',
           })
           if (this.props.user.role === 'user') {
@@ -371,7 +377,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                           ) : (
                               <React.Fragment>
                                 <td>{reimbursement.author}</td>
-                                <td>{reimbursement.amount}</td>
+                                <td>${(Math.round(+reimbursement.amount * 100) / 100).toFixed(2)}</td>
                                 <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
                                 <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') || (moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Dec 31, 1899') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
                                 <td>{reimbursement.description}</td>
