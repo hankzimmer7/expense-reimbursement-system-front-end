@@ -275,7 +275,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                             <td>{reimbursement.author}</td>
                             <td>{reimbursement.amount}</td>
                             <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                            <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                            <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') <= 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
                             <td>{reimbursement.description}</td>
                             <td>{reimbursement.type}</td>
                             <td>{reimbursement.resolver}</td>
@@ -319,7 +319,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                               <td>{reimbursement.author}</td>
                               <td>{reimbursement.amount}</td>
                               <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                              <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                              <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') <= 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
                               <td>{reimbursement.description}</td>
                               <td>{reimbursement.type}</td>
                               <td>{reimbursement.resolver}</td>

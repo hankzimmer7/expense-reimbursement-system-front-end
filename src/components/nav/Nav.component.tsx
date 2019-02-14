@@ -12,16 +12,16 @@ export class NavComponent extends React.Component<any, any> {
             ERS
           </Link>
         </div>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarsExample04">
-          <ul className="navbar-nav ml-auto margin-nav">
-            <li className="navbar-non-link">
-              {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
-            </li>
-            {this.props.loggedIn && (
-              <React.Fragment>
+        {this.props.loggedIn && (
+          <React.Fragment>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarsExample04">
+              <ul className="navbar-nav ml-auto margin-nav">
+                <li className="navbar-non-link">
+                  {this.props.loggedIn ? `Hello, ${this.props.user.firstName}  ${this.props.user.lastName}!` : ''}
+                </li>
                 {(this.props.user.role === ('user')) || (
                   <React.Fragment>
                     <li className="nav-item active">
@@ -35,10 +35,10 @@ export class NavComponent extends React.Component<any, any> {
                 <li className="nav-item active">
                   <Link to="#" className="unset-anchor nav-link" onClick={this.props.logout}>Logout</Link>
                 </li>
-              </React.Fragment>
-            )}
-          </ul>
-        </div>
+              </ul>
+            </div>
+          </React.Fragment>
+        )}
       </nav>
     )
   }
