@@ -15,6 +15,9 @@ interface ReimbursementsComponentState {
   resolverInput: string
   message: string
   currentlyEditingReimbursement: number
+  amountUpdate: number
+  descriptionUpdate: string
+  typeUpdate: number
   statusUpdate: number
 }
 
@@ -32,6 +35,9 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       resolverInput: '0',
       message: '',
       currentlyEditingReimbursement: 0,
+      amountUpdate: 0,
+      descriptionUpdate: '',
+      typeUpdate: 0,
       statusUpdate: 0
     }
   }
@@ -137,7 +143,6 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
 
   // Handles clicking the button to add a new reimbursement
   handleNewReimbursement = () => {
-    // console.log("Clicked button to add a new reimbursement");
     this.setState({
       newReimbursementIsBeingAdded: true
     })
@@ -146,8 +151,8 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
 
   // When the user clicks the submit button for a new reimbursement
   handleSubmitReimbursement = () => {
-    // console.log("Clicked button to submit reimbursement");
-    // console.log("this.state", this.state);
+
+    //Check to ensure the fields are entered correctly
     if (isNaN(parseFloat(this.state.amountInput))) {
       this.setState({
         message: 'Amount must be a number'
@@ -172,10 +177,10 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
         type: this.state.typeInput,
         resolver: this.state.resolverInput
       }
-      // console.log(newReimbursement);
+
+      // Post the new reimbursement to the database
       expenseClient.post('/reimbursements', newReimbursement)
         .then(response => {
-          // console.log('Reimbursements post response.data', response.data);
           this.setState({
             newReimbursementIsBeingAdded: false,
             amountInput: '',
@@ -184,7 +189,6 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
             resolverInput: '0',
             message: '',
           })
-          // console.log("this.props.user.role", this.props.user.role);
           if (this.props.user.role === 'user') {
             this.loadMyReimbursements();
           } else {
@@ -204,43 +208,27 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
 
   // When the user clicks the button to update a reimbursement, set that as the currently editing reimbursement
   handleUpdateReimbursement = (event) => {
-    // console.log("Clicked to update reimbursement")
-    // console.log("Reimbursements this.state", this.state);
-    // console.log("event", event);
-    // console.log("event.target.key", event.target.key);
-    // console.log("event.target", event.target);
-    // console.log("event.target.value", event.target.value);
-
     const reimbursementId = +event.target.value;
-    // Find the reimbursement being updated in the reimbursements array on state
-    // const reimbursementBeingUpdated = this.state.reimbursements.find(obj => {
-    //   return obj.reimbursementId === reimbursementId
-    // })
     let reimbursementBeingUpdated;
+    // Load the current reimbursement from the database
     expenseClient.get(`/reimbursements/nojoin/${reimbursementId}`)
       .then(response => {
-        // console.log('Reimbursements response.data', response.data);
         reimbursementBeingUpdated = response.data
-        // console.log("reimbursementBeingUpdated:", reimbursementBeingUpdated);
-        // console.log("reimbursementId", reimbursementId);
         if (reimbursementBeingUpdated) {
           this.setState({
             currentlyEditingReimbursement: reimbursementId,
-            // amountUpdate: this.state.amountUpdate,
-            // description: this.state.descriptionUpdate,
+            amountUpdate: reimbursementBeingUpdated.amount,
+            descriptionUpdate: reimbursementBeingUpdated.description,
+            typeUpdate: reimbursementBeingUpdated.type,
             statusUpdate: reimbursementBeingUpdated.status
-            // status: this.state.statusUpdate,
-            // type: this.state.typeUpdate[reimbursementId].status
           }, () => { console.log(this.state) })
         }
       }
       ).catch(err => console.log(err));
-
   }
 
   // When the user clicks the button to cancel updating reimbursement
   handleCancelUpdateReimbursement = () => {
-    // console.log("Clicked to cancel update reimbursement");
     this.setState({
       currentlyEditingReimbursement: 0
     }, () => { console.log(this.state) })
@@ -250,10 +238,10 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
   handleSaveUpdatedReimbursement = () => {
     const updatedReimbursement = {
       reimbursementId: this.state.currentlyEditingReimbursement,
-      // amount: this.state.amountUpdate,
-      // description: this.state.descriptionUpdate,
+      amount: this.state.amountUpdate,
+      description: this.state.descriptionUpdate,
       status: this.state.statusUpdate,
-      // type: this.state.typeUpdate
+      type: this.state.typeUpdate
     }
     expenseClient.patch('/reimbursements', updatedReimbursement)
       .then(response => {
@@ -278,12 +266,12 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
           {this.props.loggedIn ? (
             <React.Fragment>
               {this.props.user.role !== 'user' ? (
-              <div className="filtering-links-wrapper">
-                <button type="button" className="btn btn-space" onClick={this.loadAllReimbursements}>All</button>
-                <button type="button" className="btn btn-space" onClick={this.handleFilterPending}>Pending</button>
-                <button type="button" className="btn btn-space" onClick={this.handleFilterApproved}>Approved</button>
-                <button type="button" className="btn btn-space" onClick={this.handleFilterDenied}>Denied</button>
-              </div>
+                <div className="filtering-links-wrapper">
+                  <button type="button" className="btn btn-space" onClick={this.loadAllReimbursements}>All</button>
+                  <button type="button" className="btn btn-space" onClick={this.handleFilterPending}>Pending</button>
+                  <button type="button" className="btn btn-space" onClick={this.handleFilterApproved}>Approved</button>
+                  <button type="button" className="btn btn-space" onClick={this.handleFilterDenied}>Denied</button>
+                </div>
               ) : null}
               <div className="table-wrapper">
                 <table className="table">
@@ -306,11 +294,44 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                           {this.state.currentlyEditingReimbursement == reimbursement.reimbursementId ? (
                             <React.Fragment>
                               <td>{reimbursement.author}</td>
-                              <td>{reimbursement.amount}</td>
+                              <td>
+                                <div className="input-group input-group-sm">
+                                  <input type="number"
+                                    name="amountUpdate"
+                                    className="form-control"
+                                    aria-label="Amount" aria-describedby="Amount-update"
+                                    value={this.state.amountUpdate}
+                                    onChange={this.handleInputChange} />
+                                </div>
+                              </td>
                               <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
                               <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') || (moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Dec 31, 1899') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
-                              <td>{reimbursement.description}</td>
-                              <td>{reimbursement.type}</td>
+                              <td>
+                                <div className="input-group input-group-sm">
+                                  <input type="text"
+                                    name="descriptionUpdate"
+                                    className="form-control"
+                                    aria-label="Description" aria-describedby="description-update"
+                                    value={this.state.descriptionUpdate}
+                                    onChange={this.handleInputChange} />
+                                </div>
+                              </td>
+                              <td>
+                                <div className="input-group input-group-sm custom-select-wrapper">
+                                  <select
+                                    className="custom-select"
+                                    name="typeUpdate"
+                                    value={this.state.typeUpdate}
+                                    onChange={this.handleInputChange}
+                                  >
+                                    <option value="0">Type...</option>
+                                    <option value="1">Lodging</option>
+                                    <option value="2">Travel</option>
+                                    <option value="3">Food</option>
+                                    <option value="4">Other</option>
+                                  </select>
+                                </div>
+                              </td>
                               <td>{reimbursement.resolver}</td>
                               <td>
                                 <div className="input-group input-group-sm custom-select-wrapper">
@@ -470,8 +491,6 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                 New Reimbursement
             </button>
             )}
-
-
         </div>
       )
     }

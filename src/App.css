@@ -56,6 +56,10 @@ body {
   margin-right: 2em;
 }
 
+.navbar-dark .navbar-toggler {
+  border-color: rgb(255, 255, 255);
+}
+
 .navbar-non-link {
   padding: .5rem 1rem .5rem 0;
 }
@@ -162,6 +166,9 @@ option {
   background: black;
 }
 
+button:focus {
+  outline: none;
+}
 
 .btn {
   color: rgb(130, 200, 0);
