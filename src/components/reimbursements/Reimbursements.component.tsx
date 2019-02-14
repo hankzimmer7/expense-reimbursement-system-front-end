@@ -163,12 +163,12 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     }
   }
 
-    // When the user clicks the button to cancel submitting a reimbursement
-    handleCancelSubmitReimbursement = () => {
-      this.setState({
-        newReimbursementIsBeingAdded: false
-      })
-    }
+  // When the user clicks the button to cancel submitting a reimbursement
+  handleCancelSubmitReimbursement = () => {
+    this.setState({
+      newReimbursementIsBeingAdded: false
+    })
+  }
 
   // When the user clicks the button to update a reimbursement, set that as the currently editing reimbursement
   handleUpdateReimbursement = (event) => {
@@ -262,8 +262,8 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                     <th scope="col">Type</th>
                     <th scope="col">Resolver</th>
                     <th scope="col">Status</th>
-                    <th>
-                    </th>
+                    <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -275,7 +275,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                             <td>{reimbursement.author}</td>
                             <td>{reimbursement.amount}</td>
                             <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                            <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') <= 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                            <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') || (moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Dec 31, 1899') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
                             <td>{reimbursement.description}</td>
                             <td>{reimbursement.type}</td>
                             <td>{reimbursement.resolver}</td>
@@ -319,7 +319,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                               <td>{reimbursement.author}</td>
                               <td>{reimbursement.amount}</td>
                               <td>{moment(reimbursement.dateSubmitted).format('MMM D, YYYY')}</td>
-                              <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') <= 'Jan 1, 1900') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
+                              <td>{(moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Jan 1, 1900') || (moment(reimbursement.dateResolved).format('MMM D, YYYY') === 'Dec 31, 1899') ? 'Not Resolved' : (moment(reimbursement.dateResolved).format('MMM D, YYYY'))}</td>
                               <td>{reimbursement.description}</td>
                               <td>{reimbursement.type}</td>
                               <td>{reimbursement.resolver}</td>
@@ -336,13 +336,16 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                                 </button>
                                 </td>
                               ) : (
-                                  null
+                                  <React.Fragment>
+                                    <td></td>
+                                    <td></td>
+                                  </React.Fragment>
                                 )}
                             </React.Fragment>
                           )}
                       </tr>
                     ))
-                  ) :  null }
+                  ) : null}
                   {this.state.newReimbursementIsBeingAdded ? (
                     <tr >
                       <td>{`${this.props.user.firstName} ${this.props.user.lastName}`}</td>
@@ -419,7 +422,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
               >
                 Submit Reimbursement
             </button>
-            <button
+              <button
                 type="button"
                 className="btn btn-small"
                 onClick={this.handleCancelSubmitReimbursement}

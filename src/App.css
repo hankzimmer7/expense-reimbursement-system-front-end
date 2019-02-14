@@ -116,10 +116,13 @@ td {
   border: 1px solid red;
 }
 
-.form-control:focus, .custom-select:focus {
+.form-control:focus,
+.custom-select:focus {
   border-color: rgb(130, 200, 0);
   box-shadow: 0 0 0 0.2rem rgba(130, 200, 0, .25);
 }
+
+
 
 .custom-select-wrapper {
   background: url("./assets/down-arrow.png") no-repeat right;
@@ -134,13 +137,15 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
 }
+
 input:-webkit-autofill {
   -webkit-text-fill-color: rgb(130, 200, 0);
 }
 
-.custom-select, .input-group-text {
+.custom-select,
+.input-group-text {
   color: rgb(130, 200, 0);
   background: transparent;
   border: 1px solid red;
@@ -161,6 +166,10 @@ option {
 .btn:hover {
   color: rgb(208, 255, 119);
   border-color: rgb(208, 255, 119)
+}
+
+.btn:focus {
+  box-shadow: none;
 }
 
 .btn-small {
