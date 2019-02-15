@@ -44,28 +44,29 @@ class LoginComponent extends Component<any, any> {
         this.setState({
           message: 'Please enter your password'
         }))
+    } else {
+      //Post the login and see if the username and password are correct
+      expenseClient
+        .post('/login', {
+          "username": this.state.username,
+          "password": this.state.password
+        })
+        .then(response => {
+          if (response.status === 200) {
+            // update App.tsx state
+            this.props.updateUser({
+              loggedIn: true,
+              user: response.data,
+              userCheckDone: true
+            })
+          }
+        }).catch(error => {
+          // Display to the user that there was a login error
+          this.setState({
+            message: 'Incorrect username or password. Both are case sensitive.'
+          });
+        })
     }
-    //Post the login and see if the username and password are correct
-    expenseClient
-      .post('/login', {
-        "username": this.state.username,
-        "password": this.state.password
-      })
-      .then(response => {
-        if (response.status === 200) {
-          // update App.tsx state
-          this.props.updateUser({
-            loggedIn: true,
-            user: response.data,
-            userCheckDone: true
-          })
-        }
-      }).catch(error => {
-        // Display to the user that there was a login error
-        this.setState({
-          message: 'Incorrect username or password. Both are case sensitive.'
-        });
-      })
   }
 
   render() {

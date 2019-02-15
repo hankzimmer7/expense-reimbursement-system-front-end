@@ -49,7 +49,6 @@ class App extends Component<any, any> {
   logout = (event) => {
     event.preventDefault();
     expenseClient.get('/logout').then(response => {
-      console.log("Logout response.data", response.data);
       if (response.status === 200) {
         this.setState({
           loggedIn: false,
