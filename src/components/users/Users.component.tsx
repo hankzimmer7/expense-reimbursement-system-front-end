@@ -16,13 +16,14 @@ interface UsersComponentState {
   lastNameInput: string
   emailInput: string
   roleInput: number
-  message: string
+  newUserMessage: string
   currentlyEditingUser: number
   usernameUpdate: string
   firstNameUpdate: string
   lastNameUpdate: string
   emailUpdate: string
   roleUpdate: number
+  updateUserMessage: string
 }
 
 export class UsersComponent extends React.Component<any, UsersComponentState> {
@@ -41,13 +42,14 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
       lastNameInput: '',
       emailInput: '',
       roleInput: 0,
-      message: '',
+      newUserMessage: '',
       currentlyEditingUser: 0,
       usernameUpdate: '',
       firstNameUpdate: '',
       lastNameUpdate: '',
       emailUpdate: '',
-      roleUpdate: 0
+      roleUpdate: 0,
+      updateUserMessage: ''
     }
   }
 
@@ -90,20 +92,15 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
     this.setState({
       searchMessage: ''
     }, () => {
-      console.log(`Searching for username ${this.state.searchInput}`)
       if (this.state.searchInput !== '') {
         expenseClient.get(`/users/username/${this.state.searchInput}`)
           .then(response => {
-            console.log("response.data", response.data);
             if (response.data.length > 0) {
               this.setState({
                 users: response.data,
                 usersLoaded: true,
-              }, () => {
-                console.log("this.state", this.state);
               })
             } else {
-              console.log("no users found");
               this.setState({
                 usersLoaded: false,
                 searchMessage: 'No users found'
@@ -146,27 +143,27 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
   handleSubmitUser = () => {
     if (this.state.usernameInput === '') {
       this.setState({
-        message: 'Please enter a username'
+        newUserMessage: 'Please enter a username'
       })
     } else if (this.state.passwordInput === '') {
       this.setState({
-        message: 'Please enter a password'
+        newUserMessage: 'Please enter a password'
       })
     } else if (this.state.firstNameInput === '') {
       this.setState({
-        message: 'Please enter a first name'
+        newUserMessage: 'Please enter a first name'
       })
     } else if (this.state.lastNameInput === '') {
       this.setState({
-        message: 'Please enter a last name'
+        newUserMessage: 'Please enter a last name'
       })
     } else if (this.state.emailInput === '') {
       this.setState({
-        message: 'Please enter an email address'
+        newUserMessage: 'Please enter an email address'
       })
     } else if (this.state.roleInput === 0) {
       this.setState({
-        message: 'Please select a role'
+        newUserMessage: 'Please select a role'
       })
     }
     else {
@@ -174,7 +171,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
       const usernameIsAlreadyTaken = this.state.users.find(user => user.username === this.state.usernameInput);
       if (usernameIsAlreadyTaken) {
         this.setState({
-          message: 'Username is already taken. Please enter a different username.'
+          newUserMessage: 'Username is already taken. Please enter a different username.'
         })
       } else {
 
@@ -195,7 +192,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
               firstNameInput: '',
               lastNameInput: '',
               emailInput: '',
-              message: '',
+              newUserMessage: '',
               roleInput: 0,
             })
             this.loadUsers();
@@ -208,7 +205,8 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
   // When the user clicks the button to cancel submitting a user
   handleCancelSubmitUser = () => {
     this.setState({
-      newUserIsBeingAdded: false
+      newUserIsBeingAdded: false,
+      newUserMessage: ''
     })
   }
 
@@ -228,7 +226,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
             lastNameUpdate: userBeingUpdated.lastName,
             emailUpdate: userBeingUpdated.email,
             roleUpdate: userBeingUpdated.role
-          }, () => { console.log(this.state) })
+          })
         }
       }
       ).catch(err => console.log(err));
@@ -236,39 +234,41 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
 
   // When the user clicks the button to cancel updating reimbursement
   handleCancelUpdateUser = () => {
-    console.log("Clicked to cancel update user")
     this.setState({
-      currentlyEditingUser: 0
-    }, () => { console.log(this.state) })
+      currentlyEditingUser: 0,
+      updateUserMessage: ''
+    })
   }
 
   // When the admin clicks the button to save changes to a user
   handleSaveUpdatedUser = () => {
-    console.log("Clicked to save changes");
     const updatedUser = {
       userId: this.state.currentlyEditingUser,
       username: this.state.usernameUpdate,
       firstName: this.state.firstNameUpdate,
       lastName: this.state.lastNameUpdate,
       email: this.state.emailUpdate,
-      role: this.state.roleUpdate
+      role: +this.state.roleUpdate
     }
-    console.log("updatedUser to be sent to API:", updatedUser);
-    expenseClient.patch('/users', updatedUser)
-      .then(response => {
-        console.log('Users post response.data', response.data);
-        this.setState({
-          currentlyEditingUser: 0
-        }, () => {
-          console.log("Loading Users");
-          this.loadUsers();
-        })
+    if (updatedUser.role === 0) {
+      this.setState({
+        updateUserMessage: 'Please select a role'
       })
-      .catch(err => console.log(err))
+    } else {
+      expenseClient.patch('/users', updatedUser)
+        .then(response => {
+          this.setState({
+            currentlyEditingUser: 0,
+            updateUserMessage: ''
+          }, () => {
+            this.loadUsers();
+          })
+        })
+        .catch(err => console.log(err))
+    }
   }
 
   render() {
-    console.log("User this.state.users, render", this.state.users);
     if (this.state.redirectTo) {
       return <Redirect to={{ pathname: this.state.redirectTo }} />
     } else {
@@ -285,7 +285,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                   className="form-control"
                   name="searchInput"
                   value={this.state.searchInput}
-                  placeholder="Search username..."
+                  placeholder="Search..."
                   onChange={this.handleInputChange} />
                 <span className="input-group-btn">
                   <button className="btn" type="submit" onClick={this.handleSearchUsername}>Find User</button>
@@ -389,6 +389,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                                     Cancel
                             </button>
                                 </td>
+                                <td className="text-danger no-border">{this.state.updateUserMessage}</td>
                               </React.Fragment>
                             ) : (
                                 <React.Fragment>
@@ -487,7 +488,7 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
                   {this.props.user.role === 'admin' ? (
                     this.state.newUserIsBeingAdded ? (
                       <React.Fragment>
-                        <p className="text-danger">{this.state.message}</p>
+                        <p className="text-danger">{this.state.newUserMessage}</p>
                         <button
                           type="submit"
                           id="submit-user-button-div"

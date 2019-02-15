@@ -13,12 +13,13 @@ interface ReimbursementsComponentState {
   descriptionInput: string
   typeInput: number
   resolverInput: number
-  message: string
+  newReimbursementMessage: string
   currentlyEditingReimbursement: number
   amountUpdate: number
   descriptionUpdate: string
   typeUpdate: number
   statusUpdate: number
+  updateReimbursementMessage: string
 }
 
 export class ReimbursementsComponent extends React.Component<any, ReimbursementsComponentState> {
@@ -33,12 +34,13 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       descriptionInput: '',
       typeInput: 0,
       resolverInput: 0,
-      message: '',
+      newReimbursementMessage: '',
       currentlyEditingReimbursement: 0,
       amountUpdate: 0,
       descriptionUpdate: '',
       typeUpdate: 0,
-      statusUpdate: 0
+      statusUpdate: 0,
+      updateReimbursementMessage: ''
     }
   }
 
@@ -155,23 +157,23 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     //Check to ensure the fields are entered correctly
     if (isNaN(this.state.amountInput)) {
       this.setState({
-        message: 'Amount must be a number'
+        newReimbursementMessage: 'Amount must be a number'
       })
     } else if (this.state.amountInput <= 0) {
       this.setState({
-        message: 'Amount must be greater than 0'
+        newReimbursementMessage: 'Amount must be greater than 0'
       })
     } else if (this.state.descriptionInput === '') {
       this.setState({
-        message: 'Please enter a description'
+        newReimbursementMessage: 'Please enter a description'
       })
     } else if (this.state.typeInput === 0) {
       this.setState({
-        message: 'Please select a type'
+        newReimbursementMessage: 'Please select a type'
       })
     } else if (this.state.resolverInput === 0) {
       this.setState({
-        message: 'Please select a resolver'
+        newReimbursementMessage: 'Please select a resolver'
       })
     } else {
       const newReimbursement = {
@@ -182,8 +184,6 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
         resolver: this.state.resolverInput
       }
 
-      console.log("handleSubmitReimbursement, new reimbursement being added to database:",newReimbursement);
-
       // Post the new reimbursement to the database
       expenseClient.post('/reimbursements', newReimbursement)
         .then(response => {
@@ -193,7 +193,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
             descriptionInput: '',
             typeInput: 0,
             resolverInput: 0,
-            message: '',
+            newReimbursementMessage: '',
           })
           if (this.props.user.role === 'user') {
             this.loadMyReimbursements();
@@ -208,7 +208,8 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
   // When the user clicks the button to cancel submitting a reimbursement
   handleCancelSubmitReimbursement = () => {
     this.setState({
-      newReimbursementIsBeingAdded: false
+      newReimbursementIsBeingAdded: false,
+      newReimbursementMessage: ''
     })
   }
 
@@ -227,7 +228,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
             descriptionUpdate: reimbursementBeingUpdated.description,
             typeUpdate: reimbursementBeingUpdated.type,
             statusUpdate: reimbursementBeingUpdated.status
-          }, () => { console.log(this.state) })
+          })
         }
       }
       ).catch(err => console.log(err));
@@ -236,8 +237,9 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
   // When the user clicks the button to cancel updating reimbursement
   handleCancelUpdateReimbursement = () => {
     this.setState({
-      currentlyEditingReimbursement: 0
-    }, () => { console.log(this.state) })
+      currentlyEditingReimbursement: 0,
+      updateReimbursementMessage: ''
+    })
   }
 
   // When the manager or admin clicks the button to save changes to a reimbursement
@@ -246,18 +248,38 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
       reimbursementId: this.state.currentlyEditingReimbursement,
       amount: this.state.amountUpdate,
       description: this.state.descriptionUpdate,
-      status: this.state.statusUpdate,
-      type: this.state.typeUpdate
+      status: +this.state.statusUpdate,
+      type: +this.state.typeUpdate
     }
-    expenseClient.patch('/reimbursements', updatedReimbursement)
-      .then(response => {
-        this.setState({
-          currentlyEditingReimbursement: 0
-        }, () => {
-          this.loadAllReimbursements();
-        })
+    if (updatedReimbursement.amount <= 0) {
+      this.setState({
+        updateReimbursementMessage: 'Amount must be > 0'
       })
-      .catch(err => console.log(err))
+    } else if (isNaN(updatedReimbursement.amount)) {
+      this.setState({
+        updateReimbursementMessage: 'Amount must be > 0'
+      })
+    } else if (updatedReimbursement.type === 0) {
+      this.setState({
+        updateReimbursementMessage: 'Please select a type'
+      })
+    }
+    else if (updatedReimbursement.status === 0) {
+      this.setState({
+        updateReimbursementMessage: 'Please select a status'
+      })
+    } else {
+      expenseClient.patch('/reimbursements', updatedReimbursement)
+        .then(response => {
+          this.setState({
+            currentlyEditingReimbursement: 0,
+            updateReimbursementMessage: ''
+          }, () => {
+            this.loadAllReimbursements();
+          })
+        })
+        .catch(err => console.log(err))
+    }
   }
 
   render() {
@@ -373,6 +395,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
                                   Cancel
                             </button>
                               </td>
+                              <td className="text-danger no-border">{this.state.updateReimbursementMessage}</td>
                             </React.Fragment>
                           ) : (
                               <React.Fragment>
@@ -468,7 +491,7 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
           ) : null}
           {this.state.newReimbursementIsBeingAdded ? (
             <React.Fragment>
-              <p className="text-danger">{this.state.message}</p>
+              <p className="text-danger">{this.state.newReimbursementMessage}</p>
               <button
                 type="submit"
                 id="submit-reimbursement-button-div"

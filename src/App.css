@@ -93,7 +93,7 @@ nav {
 .jumbotron {
   background: black;
   background: rgb(0, 0, 0, .8);
-  border: 1px solid red;
+  border: 1px solid lightblue;
 }
 
 .filtering-links-wrapper {
@@ -125,7 +125,7 @@ td.no-border {
 .form-control:focus {
   color: rgb(130, 200, 0);
   background: transparent;
-  border: 1px solid red;
+  border: 1px solid lightblue;
 }
 
 .form-control:focus,
@@ -158,7 +158,7 @@ input:-webkit-autofill {
 .input-group-text {
   color: rgb(130, 200, 0);
   background: transparent;
-  border: 1px solid red;
+  border: 1px solid lightblue;
 }
 
 option {
@@ -173,7 +173,7 @@ button:focus {
 .btn {
   color: rgb(130, 200, 0);
   background: transparent;
-  border: 1px solid red;
+  border: 1px solid lightblue;
 }
 
 .btn:hover {

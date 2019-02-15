@@ -25,26 +25,18 @@ class App extends Component<any, any> {
 
   // Check if a user is logged in on the API. If so, update the App's state accordingly
   checkUser = () => {
-    // console.log("App.tsx running function checkUser");
     expenseClient.get('/login/info').then(response => {
-      // console.log("App.tsx checkUser response.data:", response.data);
       if (response.data) {
         this.setState({
           loggedIn: true,
           user: response.data,
           userCheckDone: true
-        }, () => {
-          // console.log("App.tsx checkUser got a response.");
-          // console.log('App.tsx this.state', this.state);
         })
       } else {
         this.setState({
           loggedIn: false,
           user: null,
           userCheckDone: true
-        }, () => {
-          // console.log("App.tsx checkUser didn't get a response.");
-          // console.log('App.tsx this.state', this.state);
         })
       }
     })
@@ -52,23 +44,6 @@ class App extends Component<any, any> {
 
   updateUser = userObject => {
     this.setState(userObject);
-  }
-
-  login = (username, password) => {
-    expenseClient.post('/login', {
-      username,
-      password
-    })
-      .then(response => {
-        if (response.status === 200) {
-          // update the state
-          this.setState({
-            loggedIn: true,
-            // user: response.user,
-            userCheckDone: false
-          })
-        }
-      })
   }
 
   logout = (event) => {

@@ -3,7 +3,6 @@ import { Redirect } from 'react-router-dom'
 import expenseClient from '../../axios/expense.client';
 
 class LoginComponent extends Component<any, any> {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -52,16 +51,15 @@ class LoginComponent extends Component<any, any> {
         "password": this.state.password
       })
       .then(response => {
-        console.log('response from /login:', response);
         if (response.status === 200) {
           // update App.tsx state
           this.props.updateUser({
             loggedIn: true,
-            user: response.data
+            user: response.data,
+            userCheckDone: true
           })
         }
       }).catch(error => {
-        console.log('login error: ', error);
         // Display to the user that there was a login error
         this.setState({
           message: 'Incorrect username or password. Both are case sensitive.'
