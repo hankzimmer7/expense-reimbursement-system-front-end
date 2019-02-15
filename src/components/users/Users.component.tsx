@@ -128,7 +128,9 @@ export class UsersComponent extends React.Component<any, UsersComponentState> {
     const { name, value } = event.target;
     this.setState({
       ...this.state,
-      [name]: value
+      [name]: value,
+      newUserMessage: '',
+      updateUserMessage: ''
     })
   }
 

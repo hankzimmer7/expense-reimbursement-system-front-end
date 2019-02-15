@@ -139,7 +139,9 @@ export class ReimbursementsComponent extends React.Component<any, Reimbursements
     const { name, value } = event.target;
     this.setState({
       ...this.state,
-      [name]: value
+      [name]: value,
+      newReimbursementMessage: '',
+      updateReimbursementMessage: ''
     })
   };
 
