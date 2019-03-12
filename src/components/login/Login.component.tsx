@@ -52,6 +52,8 @@ class LoginComponent extends Component<any, any> {
           "password": this.state.password
         })
         .then(response => {
+          console.log('post response', response);
+          console.log('post response.status', response.status);
           if (response.status === 200) {
             // update App.tsx state
             this.props.updateUser({
@@ -59,9 +61,15 @@ class LoginComponent extends Component<any, any> {
               user: response.data,
               userCheckDone: true
             })
-          };
+          }
         }).catch(error => {
           console.log(error);
+          if (error.response) {
+            console.log('post catch error.response', error.response);
+            if (error.response.status) {
+              console.log('post catch error.response.status', error.response.status);
+            };
+          };
           // If the credentials are incorrect, display to the user that there was a login error
           if (error.response && (error.response.status === 400)) {
             this.setState({
