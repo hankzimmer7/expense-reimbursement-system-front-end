@@ -52,7 +52,6 @@ class LoginComponent extends Component<any, any> {
           "password": this.state.password
         })
         .then(response => {
-          console.log('response', response);
           if (response.status === 200) {
             // update App.tsx state
             this.props.updateUser({
