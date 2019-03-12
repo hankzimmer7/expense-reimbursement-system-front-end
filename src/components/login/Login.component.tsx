@@ -52,6 +52,7 @@ class LoginComponent extends Component<any, any> {
           "password": this.state.password
         })
         .then(response => {
+          console.log('response', response);
           if (response.status === 200) {
             // update App.tsx state
             this.props.updateUser({
@@ -59,84 +60,51 @@ class LoginComponent extends Component<any, any> {
               user: response.data,
               userCheckDone: true
             })
-          }
+          };
         }).catch(error => {
-          // Display to the user that there was a login error
-          this.setState({
-            message: 'Incorrect username or password. Both are case sensitive.'
-          });
-        })
-    }
-  }
+          console.log(error);
+          // If the credentials are incorrect, display to the user that there was a login error
+          if (error.response && (error.response.status === 400)) {
+            this.setState({
+              message: 'Incorrect username or password. Both are case sensitive.'
+            })
+          }
+          // If there is a connection error, display to the user that the server is still starting
+          else {
+            this.setState({
+              message: 'Heroku server is still starting up. Please try again momentarily.'
+            })
+          };
+        });
+    };
+  };
 
   handleAdminLoginDemo = () => {
-    expenseClient
-        .post('/login', {
-          "username": 'raynor',
-          "password": 'marshall'
-        })
-        .then(response => {
-          if (response.status === 200) {
-            // update App.tsx state
-            this.props.updateUser({
-              loggedIn: true,
-              user: response.data,
-              userCheckDone: true
-            })
-          }
-        }).catch(error => {
-          // Display to the user that there was a login error
-          this.setState({
-            message: 'Incorrect username or password. Both are case sensitive.'
-          });
-        })
-  }
+    this.setState({
+      "username": 'raynor',
+      "password": 'marshall'
+    }, () => {
+      this.handleFormSubmit(event);
+    });
+  };
 
   handleManagerLoginDemo = () => {
-    expenseClient
-        .post('/login', {
-          "username": 'nova',
-          "password": 'ghost'
-        })
-        .then(response => {
-          if (response.status === 200) {
-            // update App.tsx state
-            this.props.updateUser({
-              loggedIn: true,
-              user: response.data,
-              userCheckDone: true
-            })
-          }
-        }).catch(error => {
-          // Display to the user that there was a login error
-          this.setState({
-            message: 'Incorrect username or password. Both are case sensitive.'
-          });
-        })
-  }
+    this.setState({
+      "username": 'nova',
+      "password": 'ghost'
+    }, () => {
+      this.handleFormSubmit(event);
+    });
+  };
 
   handleUserLoginDemo = () => {
-    expenseClient
-        .post('/login', {
-          "username": 'fenix',
-          "password": 'fenix'
-        })
-        .then(response => {
-          if (response.status === 200) {
-            // update App.tsx state
-            this.props.updateUser({
-              loggedIn: true,
-              user: response.data,
-              userCheckDone: true
-            })
-          }
-        }).catch(error => {
-          // Display to the user that there was a login error
-          this.setState({
-            message: 'Incorrect username or password. Both are case sensitive.'
-          });
-        })
-  }
+    this.setState({
+      "username": 'fenix',
+      "password": 'fenix'
+    }, () => {
+      this.handleFormSubmit(event);
+    });
+  };
 
   render() {
     if (this.state.redirectTo) {
@@ -187,7 +155,7 @@ class LoginComponent extends Component<any, any> {
                 type="button"
                 className="btn btn-block"
                 value="Log In"
-                onClick={this.handleAdminLoginDemo}
+                onClick={() => { this.handleAdminLoginDemo() }}
               >
                 Log In As Admin
           </button>
@@ -213,11 +181,9 @@ class LoginComponent extends Component<any, any> {
           </button>
             </div>
           </form>
-
         </div >
-
       )
-    }
+    };
   };
 };
 
