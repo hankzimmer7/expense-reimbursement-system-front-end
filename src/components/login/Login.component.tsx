@@ -69,6 +69,75 @@ class LoginComponent extends Component<any, any> {
     }
   }
 
+  handleAdminLoginDemo = () => {
+    expenseClient
+        .post('/login', {
+          "username": 'raynor',
+          "password": 'marshall'
+        })
+        .then(response => {
+          if (response.status === 200) {
+            // update App.tsx state
+            this.props.updateUser({
+              loggedIn: true,
+              user: response.data,
+              userCheckDone: true
+            })
+          }
+        }).catch(error => {
+          // Display to the user that there was a login error
+          this.setState({
+            message: 'Incorrect username or password. Both are case sensitive.'
+          });
+        })
+  }
+
+  handleManagerLoginDemo = () => {
+    expenseClient
+        .post('/login', {
+          "username": 'nova',
+          "password": 'ghost'
+        })
+        .then(response => {
+          if (response.status === 200) {
+            // update App.tsx state
+            this.props.updateUser({
+              loggedIn: true,
+              user: response.data,
+              userCheckDone: true
+            })
+          }
+        }).catch(error => {
+          // Display to the user that there was a login error
+          this.setState({
+            message: 'Incorrect username or password. Both are case sensitive.'
+          });
+        })
+  }
+
+  handleUserLoginDemo = () => {
+    expenseClient
+        .post('/login', {
+          "username": 'fenix',
+          "password": 'fenix'
+        })
+        .then(response => {
+          if (response.status === 200) {
+            // update App.tsx state
+            this.props.updateUser({
+              loggedIn: true,
+              user: response.data,
+              userCheckDone: true
+            })
+          }
+        }).catch(error => {
+          // Display to the user that there was a login error
+          this.setState({
+            message: 'Incorrect username or password. Both are case sensitive.'
+          });
+        })
+  }
+
   render() {
     if (this.state.redirectTo) {
       return <Redirect to={{ pathname: this.state.redirectTo }} />
@@ -100,16 +169,52 @@ class LoginComponent extends Component<any, any> {
                 onChange={this.handleInputChange}
               />
             </div>
-            <button
-              type="submit"
-              className="btn btn-block"
-              value="Log In"
-              onClick={this.handleFormSubmit}
-            >
-              Log In
+            <div className="form-group">
+              <button
+                type="submit"
+                className="btn btn-block"
+                value="Log In"
+                onClick={this.handleFormSubmit}
+              >
+                Log In
+              </button>
+            </div>
+            <div className="form-group">
+              <div>For Demonstration Purposes:</div>
+            </div>
+            <div className="form-group">
+              <button
+                type="button"
+                className="btn btn-block"
+                value="Log In"
+                onClick={this.handleAdminLoginDemo}
+              >
+                Log In As Admin
           </button>
+            </div>
+            <div className="form-group">
+              <button
+                type="button"
+                className="btn btn-block"
+                value="Log In"
+                onClick={this.handleManagerLoginDemo}
+              >
+                Log In As Manager
+          </button>
+            </div>
+            <div className="form-group">
+              <button
+                type="button"
+                className="btn btn-block"
+                value="Log In"
+                onClick={this.handleUserLoginDemo}
+              >
+                Log In As User
+          </button>
+            </div>
           </form>
-        </div>
+
+        </div >
 
       )
     }
