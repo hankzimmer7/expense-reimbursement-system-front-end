@@ -146,7 +146,7 @@ class LoginComponent extends Component<any, any> {
                 Log In
               </button>
             </div>
-            <div className="form-group">
+            <div className="form-group mt-5">
               <div>For Demonstration Purposes:</div>
             </div>
             <div className="form-group">
